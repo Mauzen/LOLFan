@@ -564,12 +564,12 @@ namespace LOLFan.Hardware.LPC {
 
         public void SetFanUpRate(int index, int rate)
         {
-            throw new NotImplementedException();
+
         }
 
         public void SetFanDownRate(int index, int rate)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

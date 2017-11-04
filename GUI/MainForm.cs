@@ -1176,7 +1176,7 @@ namespace LOLFan.GUI {
     private void treeView_NodeMouseDoubleClick(object sender, 
         TreeNodeAdvMouseEventArgs e) {
         SensorNode node = e.Node.Tag as SensorNode;
-        if (node.Sensor.SensorType == SensorType.Control)
+        if (node != null && node.Sensor.SensorType == SensorType.Control)
         {
             ControlSettingsForm f = new ControlSettingsForm(node.Sensor.Name, node.Sensor.Control, this, settings);
             f.Show();

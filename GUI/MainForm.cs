@@ -730,7 +730,16 @@ namespace LOLFan.GUI {
 
             hwLoaded = true;
 
-            if (firstStart) AutoSetupOverview();
+            if (firstStart)
+            {
+                AutoSetupOverview();
+                if (MessageBox.Show("Would you like to submit a hardware report to help fix possible bugs?" + Environment.NewLine + "This helps spotting the problem if you encounter a crash.", "Submit report", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                    ReportForm form = new ReportForm();
+                    form.Report = computer.GetReport();
+                    form.ShowDialog();
+                }
+
+            }
 
             new HintsForm(HintsForm.Hints.GettingStarted);
         }

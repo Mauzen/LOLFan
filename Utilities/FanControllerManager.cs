@@ -43,7 +43,12 @@ namespace LOLFan.Utilities
             {
                 if (settings.Contains(new Identifier("FanController", i + "", "name").ToString()))
                 {
-                    AddController(new FanController(i, sensors, settings));
+                    // Skip controllers with missing fan control
+                    try
+                    {
+                        AddController(new FanController(i, sensors, settings));
+                    }
+                    catch (Exception) { }
                 }
             }
         }

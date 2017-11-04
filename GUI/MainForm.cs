@@ -1282,13 +1282,20 @@ namespace LOLFan.GUI {
         private void newControllerButton_Click(object sender, EventArgs e)
         {
             int id = fanControllerManager.GetFreeControllerSlot();
-            if (id == FanControllerManager.INVALID_CONTROLLER) return; 
-            FanController c = new FanController(fanControllerManager.GetFreeControllerSlot(), sensors, settings);
-            fanControllerManager.AddController(c);
-            controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
-            c.enabledChanged += UpdateFanControllerEnableds;
+            if (id == FanControllerManager.INVALID_CONTROLLER) return;
+            try
+            {
+                FanController c = new FanController(fanControllerManager.GetFreeControllerSlot(), sensors, settings);
 
-            c.ShowForm();
+                fanControllerManager.AddController(c);
+                controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
+                c.enabledChanged += UpdateFanControllerEnableds;
+
+                c.ShowForm();
+            } catch (Exception)
+            {
+                MessageBox.Show("Cannot create a new fan controller. No supported fan was found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }            
         }
 
         private void removeControllerButton_Click(object sender, EventArgs e)

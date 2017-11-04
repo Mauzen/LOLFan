@@ -99,6 +99,9 @@ namespace LOLFan.Utilities
                     }
                 }
             }
+
+            if (controlled == null) throw new Exception("No supported fan control found");
+
             curve = new FanControlCurve(new Identifier(identifier, "curve"), settings);
             enabled = bool.Parse(settings.GetValue(new Identifier(identifier, "enabled").ToString(), "false"));
             hysteresis = float.Parse(settings.GetValue(new Identifier(identifier, "hysteresis").ToString(), "1").Replace('.', ','));
@@ -368,4 +371,5 @@ namespace LOLFan.Utilities
             }
         }
     }
+
 }

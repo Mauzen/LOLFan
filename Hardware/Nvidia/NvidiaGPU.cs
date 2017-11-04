@@ -85,7 +85,7 @@ namespace LOLFan.Hardware.Nvidia {
       control = new Sensor("GPU Fan", 0, SensorType.Control, this, settings);
 
       NvGPUCoolerSettings coolerSettings = GetCoolerSettings();
-      if (coolerSettings.Count > 0) {
+      if (coolerSettings.Count > 0 && coolerSettings.Cooler.Length > 0 && fan != null) {
         fanControl = new Control(control, settings,
           coolerSettings.Cooler[0].DefaultMin, 
           coolerSettings.Cooler[0].DefaultMax, fan);

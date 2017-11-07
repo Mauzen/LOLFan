@@ -50,7 +50,7 @@ namespace LOLFan.Hardware.CPU {
       if (coreCount == 1)
         return "CPU Core";
       else
-        return "CPU Core #" + (i + 1);
+        return "CPU Core #" + i;
     }
 
     public GenericCPU(int processorIndex, CPUID[][] cpuid, ISettings settings)

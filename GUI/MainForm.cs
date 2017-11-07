@@ -733,6 +733,7 @@ namespace LOLFan.GUI {
             if (firstStart)
             {
                 AutoSetupOverview();
+                AutoSetupNames();
                 if (MessageBox.Show("Would you like to submit a hardware report to help fix possible bugs?" + Environment.NewLine + "This helps spotting the problem if you encounter a crash.", "Submit report", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                     ReportForm form = new ReportForm();
                     form.Report = computer.GetReport();
@@ -755,6 +756,20 @@ namespace LOLFan.GUI {
                     {
                         sensorNode.Overview = true;
                     }
+                }
+            }
+        }
+
+        private void AutoSetupNames()
+        {
+            // HDD temp names
+            int idx = 0;
+            foreach (ISensor sensor in sensors)
+            {
+                if (sensor.SensorType == SensorType.Temperature && sensor.Hardware.HardwareType == HardwareType.HDD)
+                {
+                    sensor.Name = "HDD" + idx;
+                    idx++;
                 }
             }
         }

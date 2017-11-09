@@ -113,7 +113,7 @@ namespace LOLFan.GUI
                 data.Points.Clear();
                 foreach (PointF p in control.Calibrated)
                 {
-                    data.Points.Add(new DataPoint(p.X, p.Y));
+                    data.Points.Add(new DataPoint(p.Y, p.X));
                 }
                 plot.InvalidatePlot(true);                
             }
@@ -121,7 +121,7 @@ namespace LOLFan.GUI
             new HintsForm(HintsForm.Hints.FanControlSettings);
         }
 
-        public PlotModel CreatePlotModel()
+        private PlotModel CreatePlotModel()
         {
             PlotModel model = new PlotModel() { LegendSymbolLength = 6 };
             // Add a line series
@@ -133,10 +133,10 @@ namespace LOLFan.GUI
                 MarkerStroke = OxyColors.White,
                 MarkerFill = OxyColors.SkyBlue,
                 MarkerStrokeThickness = 1.5,
-            };            
+            };
             //data.
-            LinearAxis bot = new LinearAxis(AxisPosition.Bottom,  "RPM");
-            LinearAxis left = new LinearAxis(AxisPosition.Left, 0, 100, 20, 10, "Fan duty");
+            LinearAxis bot = new LinearAxis(AxisPosition.Left, 0, control.MaxRPM + 100, 300, 100, "RPM");
+            LinearAxis left = new LinearAxis(AxisPosition.Bottom, 0, 100, 10, 5, "Fan duty [%]");
            
             bot.MajorGridlineStyle = LineStyle.Dot;
             left.MajorGridlineStyle = LineStyle.Dot;

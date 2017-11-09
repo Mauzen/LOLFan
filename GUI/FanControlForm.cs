@@ -40,12 +40,15 @@ namespace LOLFan.GUI
 
         private LinearAxis bot;
         private LinearAxis left;
+        private LinearAxis right;
 
         private FanController control;
 
         private LineSeries data;
 
         private List<IControl> controllers;
+
+        private Label plotLabel;
 
         public FanControlForm(List<ISensor> sensors, FanController control, PersistentSettings settings)
         {
@@ -71,6 +74,13 @@ namespace LOLFan.GUI
 
             this.FormBorderStyle = FormBorderStyle.SizableToolWindow;
             this.ShowInTaskbar = false;
+
+            this.plotLabel = new Label();
+            plotLabel.Text = "3434";
+            plotLabel.BackColor = Color.Transparent;
+            plotLabel.AutoSize = true;
+            plotLabel.Visible = false;            
+            plot.Controls.Add(plotLabel);
 
             valueTextBox.Text = control.ValueString.Input;
 
@@ -164,7 +174,7 @@ namespace LOLFan.GUI
                 MarkerStrokeThickness = 1.5,
             };
             //data.
-            bot = new LinearAxis(AxisPosition.Bottom, control.Curve.Min, control.Curve.Max, 10, 5, "Threshold");
+            bot = new LinearAxis(AxisPosition.Bottom, control.Curve.Min, control.Curve.Max, 5, 1, "Value");
             left = new LinearAxis(AxisPosition.Left, minY - 1, maxY + 1, 10, 5, "Fan duty");
             bot.MajorGridlineStyle = LineStyle.Dot;
             left.MajorGridlineStyle = LineStyle.Dot;
@@ -174,9 +184,10 @@ namespace LOLFan.GUI
             model.Axes.Add(left);
             model.PlotMargins = new OxyThickness(0);
             model.IsLegendVisible = false;
+
             if (control.Controlled.Calibrated != null)
             {
-                LinearAxis right = new LinearAxis(AxisPosition.Right, 0, control.Controlled.MaxRPM, 300, 100, "RPM");
+                right = new LinearAxis(AxisPosition.Right, 0, control.Controlled.MaxRPM, 300, 100, "RPM");
                 model.Axes.Add(right);
             }
             //series.Points.
@@ -202,6 +213,10 @@ namespace LOLFan.GUI
                     {
                         // Start editing this point
                         indexOfPointToMove = indexOfNearestPoint;
+
+                        // Show tracker label
+                        UpdatePlotTracker(e, data.Points[indexOfPointToMove].X, data.Points[indexOfPointToMove].Y);
+                        plotLabel.Visible = true;
                     }
                     else
                     {
@@ -211,6 +226,10 @@ namespace LOLFan.GUI
                         indexOfPointToMove = i;
                         //control.Curve.AddOrdered(new PointF((float)data.Points[i].X, (float)data.Points[i].Y));
                         control.Curve.Insert(i, new PointF((float)data.Points[i].X, (float)data.Points[i].Y));
+
+                        // Show tracker label
+                        UpdatePlotTracker(e, data.Points[i].X, data.Points[i].Y);
+                        plotLabel.Visible = true;
                     }
 
                     // Change the linestyle while editing
@@ -277,6 +296,7 @@ namespace LOLFan.GUI
                     data.Points[indexOfPointToMove] = p;
 
                     UpdateCurveTracker();
+                    UpdatePlotTracker(e, p.X, p.Y);
 
                     model.RefreshPlot(false);
                     e.Handled = true;
@@ -288,6 +308,7 @@ namespace LOLFan.GUI
                 // Stop editing
                 indexOfPointToMove = -1;
                 data.LineStyle = LineStyle.Solid;
+                plotLabel.Visible = false;
                 model.RefreshPlot(false);
                 e.Handled = true;
             };
@@ -328,11 +349,25 @@ namespace LOLFan.GUI
             return model;
         }
 
+        private void UpdatePlotTracker(OxyMouseEventArgs e, double x, double y)
+        {
+            plotLabel.Location = new Point((int)e.Position.X, (int)e.Position.Y - 15);
+            if (control.Controlled.UseCalibrated)
+            {
+                plotLabel.Text = string.Format("{0:F1}={1:F1}% ({2:F0}RPM)", x, y, y / 100.0 * control.Controlled.MaxRPM);
+            } else
+            {
+                plotLabel.Text = string.Format("{0:F1}={1:F1}%", x, y);
+            }            
+        }
+
         private void UpdateCurveTracker()
         {
             curValueLabel.Text = string.Format("{0,4:F2}/{1,4:F2}", control.LastValue, control.Curve.Get(control.LastValue));
-            bot.ExtraGridlines = new double[] { control.LastValue, control.LastAppliedValue - control.Hysteresis, control.LastAppliedValue + control.Hysteresis };
+            //bot.ExtraGridlines = new double[] { control.LastValue, control.LastAppliedValue - control.Hysteresis, control.LastAppliedValue + control.Hysteresis };
+            bot.ExtraGridlines = new double[] { control.LastValue };
             //bot.ExtraGridlineColor = OxyColor.
+            //left.ExtraGridlines = new double[] { control.Curve.Get(control.LastValue), control.Controlled.Calibrated[1].Y };
             left.ExtraGridlines = new double[] { control.Curve.Get(control.LastValue) };
 
             if (float.IsPositiveInfinity(control.LastValue))
@@ -362,6 +397,20 @@ namespace LOLFan.GUI
         private void controllerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             control.Controlled = controllers[controllerComboBox.SelectedIndex];
+            // Update RPM axis
+            if (right == null && control.Controlled.UseCalibrated)
+            {
+                right = new LinearAxis(AxisPosition.Right, 0, control.Controlled.MaxRPM, 300, 100, "RPM");
+                model.Axes.Add(right);
+            } else if (right != null && control.Controlled.UseCalibrated)
+            {
+                right.Maximum = control.Controlled.MaxRPM;
+            } else if (right != null && !control.Controlled.UseCalibrated)
+            {
+                model.Axes.Remove(right);
+                right = null;
+            }
+            InvalidatePlot();
         }
 
         private void enabledCheckbox_CheckedChanged(object sender, EventArgs e)

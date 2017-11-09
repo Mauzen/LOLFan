@@ -20,17 +20,19 @@ namespace LOLFan.GUI
 {
     public abstract class OverviewItem : Panel
     {
+        protected Overview overview;
         protected SensorNode sensorNode;
         protected Label nameLabel;
         protected Label valueLabel;
 
-        public OverviewItem(SensorNode sens)
+        public OverviewItem(SensorNode sens, Overview overview)
         {
             this.sensorNode = sens;
             this.nameLabel = new Label();
             this.nameLabel.Text = sensorNode.Sensor.Name;
             this.valueLabel = new Label();
             this.valueLabel.Text = sensorNode.ValueToString(sensorNode.Sensor.Value);
+            this.overview = overview;
          
         }
 
@@ -54,7 +56,7 @@ namespace LOLFan.GUI
 
         //private ProgressBar bar;
 
-        public TemperatureOverviewItem(SensorNode sens) : base(sens)
+        public TemperatureOverviewItem(SensorNode sens, Overview overview) : base(sens, overview)
         {
             this.Controls.Add(nameLabel);
             nameLabel.Location = new Point(0, 0);
@@ -112,7 +114,7 @@ namespace LOLFan.GUI
     {
         NumericUpDown controller = new NumericUpDown();
 
-        public FanOverviewItem(SensorNode sens) : base(sens)
+        public FanOverviewItem(SensorNode sens, Overview overview) : base(sens, overview)
         {
             this.Controls.Add(nameLabel);
             nameLabel.Location = new Point(0, 3);
@@ -141,11 +143,16 @@ namespace LOLFan.GUI
                 controller.Width = 50;
                 controller.ValueChanged += new System.EventHandler(this.controller_ValueChanged);
 
+                UpdateControllerToolTip();
             }
-
 
             this.Height = 20;
             this.Width = 250;
+        }
+
+        private void UpdateControllerToolTip()
+        {
+            overview.ToolTip.SetToolTip(controller, "Enter target fan duty and press ENTER, or use the arrow to set it.");
         }
 
         override
@@ -192,12 +199,9 @@ namespace LOLFan.GUI
 
         private void controller_ValueChanged(object sender, EventArgs e)
         {
-            if (sensorNode.Sensor.Affector.Control.ControlMode != ControlMode.Default)
-            {
-                sensorNode.Sensor.Affector.Control.SetSoftware((float)controller.Value);
-            }
-                
+            sensorNode.Sensor.Affector.Control.SetSoftware((float)controller.Value);        
         }
+
     }
 
     class OtherOverviewItem : OverviewItem
@@ -205,7 +209,7 @@ namespace LOLFan.GUI
 
         //private ProgressBar bar;
 
-        public OtherOverviewItem(SensorNode sens) : base(sens)
+        public OtherOverviewItem(SensorNode sens, Overview overview) : base(sens, overview)
         {
             this.Controls.Add(nameLabel);
             nameLabel.Location = new Point(0, 0);

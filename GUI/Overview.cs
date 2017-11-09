@@ -28,7 +28,7 @@ namespace LOLFan.GUI
         {
             InitializeComponent();
 
-            items = new List<OverviewItem>();          
+             items = new List<OverviewItem>();          
             
         }
 
@@ -55,17 +55,17 @@ namespace LOLFan.GUI
 
             if (item.Sensor.SensorType == SensorType.Temperature)
             {
-                oi = new TemperatureOverviewItem(item);
+                oi = new TemperatureOverviewItem(item, this);
                 tempsBoxLayout.Controls.Add(oi);
             }
             else if (item.Sensor.SensorType == SensorType.Fan)
             {
-                oi = new FanOverviewItem(item);
+                oi = new FanOverviewItem(item, this);
                 fanBoxLayout.Controls.Add(oi);
             }
             else
             {
-                oi = new OtherOverviewItem(item);
+                oi = new OtherOverviewItem(item, this);
                 otherBoxLayout.Controls.Add(oi);
             }
             if (oi != null) items.Add(oi);
@@ -124,5 +124,14 @@ namespace LOLFan.GUI
         {
             if (settings != null) settings.SetValue("Overview.Splitter2.Distance", splitContainer1.SplitterDistance);
         }
+
+        public ToolTip ToolTip
+        {
+            get
+            {
+                return toolTip1;
+            }
+        }
+
     }
 }

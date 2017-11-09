@@ -40,6 +40,7 @@ namespace LOLFan.GUI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tempFanSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tempsBox = new System.Windows.Forms.GroupBox();
             this.tempsBoxLayout = new System.Windows.Forms.FlowLayoutPanel();
@@ -48,6 +49,7 @@ namespace LOLFan.GUI
             this.fanBoxLayout = new System.Windows.Forms.FlowLayoutPanel();
             this.otherBox = new System.Windows.Forms.GroupBox();
             this.otherBoxLayout = new System.Windows.Forms.FlowLayoutPanel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tempFanSplitContainer.Panel1.SuspendLayout();
             this.tempFanSplitContainer.Panel2.SuspendLayout();
             this.tempFanSplitContainer.SuspendLayout();
@@ -187,5 +189,6 @@ namespace LOLFan.GUI
         private System.Windows.Forms.FlowLayoutPanel fanBoxLayout;
         private GroupBox otherBox;
         private FlowLayoutPanel otherBoxLayout;
+        private ToolTip toolTip1;
     }
 }

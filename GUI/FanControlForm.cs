@@ -185,7 +185,7 @@ namespace LOLFan.GUI
             model.PlotMargins = new OxyThickness(0);
             model.IsLegendVisible = false;
 
-            if (control.Controlled.Calibrated != null)
+            if (control.Controlled.UseCalibrated)
             {
                 right = new LinearAxis(AxisPosition.Right, 0, control.Controlled.MaxRPM, 300, 100, "RPM");
                 model.Axes.Add(right);

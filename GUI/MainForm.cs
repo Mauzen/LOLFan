@@ -1314,6 +1314,8 @@ namespace LOLFan.GUI {
                 fanControllerManager.AddController(c);
                 controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
                 c.enabledChanged += UpdateFanControllerEnableds;
+                c.NameChanged += UpdateFanControllerNames;
+                c.ControlChanged += UpdateFanControllerNames;
 
                 c.ShowForm();
             } catch (Exception)

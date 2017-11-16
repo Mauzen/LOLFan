@@ -150,7 +150,7 @@ namespace LOLFan.Utilities
                                 }
                                 else
                                 {
-                                    exp.Parameters[i + ""] = (used[i].Value.HasValue ? used[i].Control.Calibrated.GetInverse(used[i].Control.InternalSoftwareValue) / used[i].Control.MaxRPM * 100.0 : 0);
+                                    exp.Parameters[i + ""] = (used[i].Value.HasValue ? used[i].Control.Calibrated.GetInverse(used[i].Control.InternalSoftwareValue, true) / used[i].Control.MaxRPM * 100.0 : 0);
                                 }
                             }
                             else exp.Parameters[i + ""] = (used[i].Value.HasValue ? used[i].Value.Value : 0);

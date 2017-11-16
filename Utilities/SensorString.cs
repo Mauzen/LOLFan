@@ -156,7 +156,7 @@ namespace LOLFan.Utilities
                                 }
                                 else
                                 {
-                                    values[i] = (used[i].Value.HasValue ? used[i].Control.Calibrated.GetInverse(used[i].Control.InternalSoftwareValue) / used[i].Control.MaxRPM * 100.0 : 0);
+                                    values[i] = (used[i].Value.HasValue ? used[i].Control.Calibrated.GetInverse(used[i].Control.InternalSoftwareValue, true) / used[i].Control.MaxRPM * 100.0 : 0);
                                 }
                             }
                             else values[i] = (used[i].Value.HasValue ? used[i].Value.Value : 0);

@@ -160,28 +160,32 @@ namespace LOLFan.GUI
         {
             this.nameLabel.Text = sensorNode.Sensor.Name;
             this.valueLabel.Text = string.Format("{0,4:###} RPM", ((int)sensorNode.Sensor.Value));
-            IControl c = sensorNode.Sensor.Affector.Control;
-            if (!controller.Focused && c != null)
+            if (sensorNode.Sensor.Affector != null)
             {
-                if (c.UseCalibrated)
+                IControl c = sensorNode.Sensor.Affector.Control;
+                if (!controller.Focused && c != null)
                 {
-                    if (sensorNode.Sensor.Affector.Control.InternalSoftwareValue == 100)
+                    if (c.UseCalibrated)
                     {
-                        SetNumericUpDownValue(controller, (decimal)100);
-                    } else
-                    {
-                        SetNumericUpDownValue(controller, (decimal)(sensorNode.Sensor.Affector.Value.HasValue ? c.Calibrated.GetInverse(sensorNode.Sensor.Affector.Control.InternalSoftwareValue, true) / c.MaxRPM * 100.0 : 0));
+                        if (sensorNode.Sensor.Affector.Control.InternalSoftwareValue == 100)
+                        {
+                            SetNumericUpDownValue(controller, (decimal)100);
+                        }
+                        else
+                        {
+                            SetNumericUpDownValue(controller, (decimal)(sensorNode.Sensor.Affector.Value.HasValue ? c.Calibrated.GetInverse(sensorNode.Sensor.Affector.Control.InternalSoftwareValue, true) / c.MaxRPM * 100.0 : 0));
+                        }
+
                     }
-                    
+                    else
+                    {
+                        SetNumericUpDownValue(controller, (decimal)(sensorNode.Sensor.Affector.Value.HasValue ? sensorNode.Sensor.Affector.Value.Value : 0));
+                    }
+                    //if (!c.UseCalibrated) controller.Value = (decimal)(sensorNode.Sensor.Affector.Value.HasValue ? sensorNode.Sensor.Affector.Value.Value : 0);
+                    //controller.Value = (c.UseCalibrated)
+                    //    ? ((int)(c.Calibrated.Get(sensorNode.Sensor.Affector.Value.Value / 100f * c.MaxRPM)))
+                    //    : ((int)(sensorNode.Sensor.Affector.Value));
                 }
-                else
-                {
-                    SetNumericUpDownValue(controller, (decimal)(sensorNode.Sensor.Affector.Value.HasValue ? sensorNode.Sensor.Affector.Value.Value : 0));
-                }
-                //if (!c.UseCalibrated) controller.Value = (decimal)(sensorNode.Sensor.Affector.Value.HasValue ? sensorNode.Sensor.Affector.Value.Value : 0);
-                //controller.Value = (c.UseCalibrated)
-                //    ? ((int)(c.Calibrated.Get(sensorNode.Sensor.Affector.Value.Value / 100f * c.MaxRPM)))
-                //    : ((int)(sensorNode.Sensor.Affector.Value));
             }
         }
 

@@ -46,6 +46,7 @@ namespace LOLFan.Utilities
         private float lastAppliedValue;
 
         private bool tryRestart;
+        private bool overrideHysteresis;
 
         private string name;
 
@@ -123,9 +124,9 @@ namespace LOLFan.Utilities
                 // Give a startup boost
                 controlled.SetSoftware(100);
                 // Override hysteresis
-                lastAppliedValue = 0;
+                overrideHysteresis = true;
                 return;
-            }
+            }            
 
             switch (source)
             {
@@ -133,9 +134,9 @@ namespace LOLFan.Utilities
                     if (!sourceSensor.Value.HasValue) return;
 
                     lastValue = sourceSensor.Value.Value;
-                    if (Math.Abs(lastValue - lastAppliedValue) > hysteresis)
+                    if (Math.Abs(lastValue - lastAppliedValue) >= hysteresis || overrideHysteresis)
                     {
-                        controlled.SetSoftware(curve.Get(lastValue, true));
+                        controlled.SetSoftware(curve.Get(lastValue));
                         lastAppliedValue = lastValue;
                     }
                     if (valueChanged != null) valueChanged.Invoke(this, null);
@@ -145,13 +146,13 @@ namespace LOLFan.Utilities
                     if (value.Output == 0) return;
 
                     float curValue = value.Output;
-                    if (lastValue == curValue) return;
+                    if (lastValue == curValue && !overrideHysteresis) return;
 
                     lastValue = curValue;
 
-                        if (Math.Abs(lastValue - lastAppliedValue) > hysteresis)
+                        if (Math.Abs(lastValue - lastAppliedValue) >= hysteresis || overrideHysteresis)
                         {
-                            controlled.SetSoftware(curve.Get(lastValue, true));
+                            controlled.SetSoftware(curve.Get(lastValue));
                             lastAppliedValue = lastValue;
                         }
                         if (valueChanged != null) valueChanged.Invoke(this, null);
@@ -159,10 +160,8 @@ namespace LOLFan.Utilities
                     break;
             }
 
+            overrideHysteresis = false;
 
-            // Debug.WriteLine(curve.Get(lastValue));
-
-            //controlled.SetSoftware(100);
             return;
         }
 

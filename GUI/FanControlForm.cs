@@ -238,6 +238,7 @@ namespace LOLFan.GUI
                     // Remember to refresh/invalidate of the plot
                     model.RefreshPlot(false);
 
+                    control.OverrideHysteresis = true;
                     // Set the event arguments to handled - no other handlers will be called.
                     e.Handled = true;
                 } else
@@ -265,6 +266,7 @@ namespace LOLFan.GUI
                         // Remember to refresh/invalidate of the plot
                         model.RefreshPlot(false);
 
+                        control.OverrideHysteresis = true;
                         // Set the event arguments to handled - no other handlers will be called.
                         e.Handled = true;
                     }
@@ -299,6 +301,7 @@ namespace LOLFan.GUI
                     UpdatePlotTracker(e, p.X, p.Y);
 
                     model.RefreshPlot(false);
+                    control.OverrideHysteresis = true;
                     e.Handled = true;
                 }
             };

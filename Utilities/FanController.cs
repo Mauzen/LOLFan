@@ -320,6 +320,18 @@ namespace LOLFan.Utilities
             }
         }
 
+        public bool OverrideHysteresis
+        {
+            get
+            {
+                return overrideHysteresis;
+            }
+            set
+            {
+                overrideHysteresis = value;
+            }
+        }
+
         public InputSource Source
         {
             get

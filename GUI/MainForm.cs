@@ -726,7 +726,10 @@ namespace LOLFan.GUI {
             controllerListBox.ItemCheck += delegate (Object sender, ItemCheckEventArgs e)
             {
                 fanControllerManager.Controllers[e.Index].Enabled = (e.NewValue == CheckState.Checked);
-            };            
+            };
+
+            // Force overview nodes update
+            OverviewSelectionChanged(this, null);
 
             hwLoaded = true;
 

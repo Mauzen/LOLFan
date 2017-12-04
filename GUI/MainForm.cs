@@ -143,7 +143,7 @@ namespace LOLFan.GUI {
           column.Width)));
 
       treeModel = new TreeModel();
-      root = new Node(System.Environment.MachineName);
+      root = new Node(System.Environment.MachineName, new Identifier(System.Environment.MachineName), settings);
       root.Image = Utilities.EmbeddedResources.GetImage("computer.png");
       
       treeModel.Nodes.Add(root);
@@ -360,6 +360,8 @@ namespace LOLFan.GUI {
 
       // Make sure the settings are saved when the user logs off
       Microsoft.Win32.SystemEvents.SessionEnded += delegate {
+        treeView.Collapsed -= treeView_CollapsedExpanded;
+        treeView.Expanded -= treeView_CollapsedExpanded;
         computer.Close();
         SaveConfiguration();
         if (runWebServer.Value) 
@@ -731,6 +733,14 @@ namespace LOLFan.GUI {
             // Force overview nodes update
             OverviewSelectionChanged(this, null);
 
+            // Apply Monitor collapse
+            foreach (TreeNodeAdv node in treeView.AllNodes) {
+                node.IsExpanded = !(node.Tag as Node).Collapsed;
+            }
+
+            treeView.Collapsed += treeView_CollapsedExpanded;
+            treeView.Expanded += treeView_CollapsedExpanded;
+
             hwLoaded = true;
 
             if (firstStart)
@@ -746,6 +756,12 @@ namespace LOLFan.GUI {
             }
 
             new HintsForm(HintsForm.Hints.GettingStarted);
+        }
+
+        private void treeView_CollapsedExpanded(object sender, TreeViewAdvEventArgs e)
+        {
+            Node node = e.Node.Tag as Node;
+            node.Collapsed = !e.Node.IsExpanded;
         }
 
         private void AutoSetupOverview()
@@ -905,7 +921,9 @@ namespace LOLFan.GUI {
     }
     
     private void MainForm_FormClosed(object sender, FormClosedEventArgs e) {
-      Visible = false;      
+      Visible = false;
+      treeView.Collapsed -= treeView_CollapsedExpanded;
+      treeView.Expanded -= treeView_CollapsedExpanded;
       systemTray.IsMainIconEnabled = false;
       timer.Enabled = false;            
       computer.Close();

@@ -24,7 +24,7 @@ namespace LOLFan.GUI {
     private List<TypeNode> typeNodes = new List<TypeNode>();
 
     public HardwareNode(IHardware hardware, PersistentSettings settings, 
-      UnitManager unitManager) : base() 
+      UnitManager unitManager) : base(hardware.Identifier, settings) 
     {
       this.settings = settings;
       this.unitManager = unitManager;
@@ -33,7 +33,7 @@ namespace LOLFan.GUI {
       
 
             foreach (SensorType sensorType in Enum.GetValues(typeof(SensorType)))
-        typeNodes.Add(new TypeNode(sensorType));
+        typeNodes.Add(new TypeNode(sensorType, new Identifier(hardware.Identifier, sensorType.ToString()), settings));
 
       foreach (ISensor sensor in hardware.Sensors)
         SensorAdded(sensor);

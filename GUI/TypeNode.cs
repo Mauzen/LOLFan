@@ -17,7 +17,7 @@ namespace LOLFan.GUI {
 
     private SensorType sensorType;
 
-    public TypeNode(SensorType sensorType) : base() {
+    public TypeNode(SensorType sensorType, Identifier identifier, PersistentSettings settings) : base(identifier, settings) {
       this.sensorType = sensorType;
 
       switch (sensorType) {

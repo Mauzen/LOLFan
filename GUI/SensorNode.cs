@@ -38,7 +38,7 @@ namespace LOLFan.GUI {
     }
 
     public SensorNode(ISensor sensor, PersistentSettings settings, 
-      UnitManager unitManager) : base() {      
+      UnitManager unitManager) : base(sensor.Identifier, settings) {      
       this.sensor = sensor;
       this.settings = settings;
       this.unitManager = unitManager;

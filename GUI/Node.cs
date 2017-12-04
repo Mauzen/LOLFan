@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using Aga.Controls.Tree;
+using LOLFan.Hardware;
 
 namespace LOLFan.GUI {
   public class Node {
@@ -21,10 +22,13 @@ namespace LOLFan.GUI {
     private TreeModel treeModel;
     private Node parent;
     private NodeCollection nodes;
+    private PersistentSettings settings;
+    private Identifier identifier;
 
     private string text;
     private Image image;
     private bool visible;
+    private bool collapsed;
 
     private TreeModel RootTreeModel() {
       Node node = this;
@@ -34,14 +38,24 @@ namespace LOLFan.GUI {
         node = node.parent;
       }
       return null;
-    }
+    }    
 
-    public Node() : this(string.Empty) { }
+    public Node() : this(string.Empty, new Identifier("root"), null) { }
 
-    public Node(string text) {
+    public Node(Identifier identifier, PersistentSettings settings) : this(string.Empty, identifier, settings) { }
+
+    public Node(string text, Identifier identifier, PersistentSettings settings) {
       this.text = text;
       this.nodes = new NodeCollection(this);
       this.visible = true;
+      this.identifier = identifier;
+      this.settings = settings;
+
+      if (settings != null)
+      {
+        this.collapsed = settings.GetValue(new Identifier(identifier,
+          "collapsed").ToString(), false);
+      }
     }
 
     public TreeModel Model {
@@ -112,6 +126,18 @@ namespace LOLFan.GUI {
             IsVisibleChanged(this);
         }
       }
+    }
+
+    public bool Collapsed
+    {
+        get { return collapsed; }
+        set
+        {
+            collapsed = value;
+            // Only store value for collapsable nodes
+            if (settings != null && nodes.Count > 0)
+                settings.SetValue(new Identifier(identifier, "collapsed").ToString(), value);
+        }
     }
 
     public delegate void NodeEventHandler(Node node);

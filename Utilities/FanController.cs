@@ -189,6 +189,13 @@ namespace LOLFan.Utilities
             curve.SaveValuesToSettings();
 
             settings.SetValue(new Identifier(identifier, "valueString").ToString(), value.Input);
+            settings.SetValue(new Identifier(identifier, "enabled").ToString(), enabled + "");
+            settings.SetValue(new Identifier(identifier, "controlled").ToString(), controlled.Identifier.ToString());
+            settings.SetValue(new Identifier(identifier, "name").ToString(), name);
+            settings.SetValue(new Identifier(identifier, "hysteresis").ToString(), hysteresis);
+            settings.SetValue(new Identifier(identifier, "inputSource").ToString(), (int)source);
+            settings.SetValue(new Identifier(identifier, "sourceSensor").ToString(), sourceSensor.Identifier.ToString());
+            settings.SetValue(new Identifier(identifier, "tryRestart").ToString(), tryRestart);
         }
 
         public void DeleteFromSettings()
@@ -216,6 +223,12 @@ namespace LOLFan.Utilities
             get
             {
                 return id;
+            }
+            set
+            {
+                this.id = value;
+                identifier = new Identifier("FanController", id + "");
+                curve.Identifier = new Identifier(identifier, "curve");
             }
         }
 

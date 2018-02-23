@@ -123,5 +123,19 @@ namespace LOLFan.Utilities
             }
         }
 
+        public FanController CloneController(FanController f)
+        {
+            // Copy by reloading from settings
+            f.SaveToSettings();
+            FanController c = new FanController(f.ID, sensors, settings);
+            // Assign new ID to actually create a different instance
+            c.ID = GetFreeControllerSlot();
+            c.Name = c.Name + "_copy";
+            c.Enabled = false;
+            c.SaveToSettings();
+            AddController(c);
+            return c;
+        }
+
     }
 }

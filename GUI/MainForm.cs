@@ -1330,6 +1330,15 @@ namespace LOLFan.GUI {
             new UpdateChecker().Check(true);
         }
 
+        private void copyControllerButton_Click(object sender, EventArgs e)
+        {
+            FanController c = controllerListBox.GetSelectedFanController();
+            if (c == null) return;
 
+            FanController f = fanControllerManager.CloneController(c);
+            controllerListBox.AddItem(f);
+
+            f.ShowForm();
+        }
     }
 }

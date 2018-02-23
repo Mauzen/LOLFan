@@ -110,13 +110,13 @@ namespace LOLFan.GUI
                 settings = value;
                 if (settings != null)
                 {
-                    tempFanSplitContainer.SplitterDistance = settings.GetValue("Overview.Splitter1.Distance", 200);
+                    tempFanSplitContainer.SplitterDistance = settings.GetValue("Overview.Splitter1.Distance", 260);
                     splitContainer1.SplitterDistance = settings.GetValue("Overview.Splitter2.Distance", 300);
                 }
             }
         }
 
-        private void tempFanSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
+        private void tempFanSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)S
         {
             if (settings != null) settings.SetValue("Overview.Splitter1.Distance", tempFanSplitContainer.SplitterDistance);
         }

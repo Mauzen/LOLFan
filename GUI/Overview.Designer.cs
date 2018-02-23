@@ -77,7 +77,7 @@ namespace LOLFan.GUI
             // 
             this.tempFanSplitContainer.Panel2.Controls.Add(this.splitContainer1);
             this.tempFanSplitContainer.Size = new System.Drawing.Size(526, 496);
-            this.tempFanSplitContainer.SplitterDistance = 210;
+            this.tempFanSplitContainer.SplitterDistance = 260;
             this.tempFanSplitContainer.TabIndex = 9;
             this.tempFanSplitContainer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.tempFanSplitContainer_SplitterMoved);
             // 
@@ -87,7 +87,7 @@ namespace LOLFan.GUI
             this.tempsBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tempsBox.Location = new System.Drawing.Point(0, 0);
             this.tempsBox.Name = "tempsBox";
-            this.tempsBox.Size = new System.Drawing.Size(526, 210);
+            this.tempsBox.Size = new System.Drawing.Size(526, 260);
             this.tempsBox.TabIndex = 1;
             this.tempsBox.TabStop = false;
             this.tempsBox.Text = "Temperatures";
@@ -98,7 +98,7 @@ namespace LOLFan.GUI
             this.tempsBoxLayout.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.tempsBoxLayout.Location = new System.Drawing.Point(3, 16);
             this.tempsBoxLayout.Name = "tempsBoxLayout";
-            this.tempsBoxLayout.Size = new System.Drawing.Size(520, 191);
+            this.tempsBoxLayout.Size = new System.Drawing.Size(520, 241);
             this.tempsBoxLayout.TabIndex = 0;
             // 
             // splitContainer1
@@ -115,7 +115,7 @@ namespace LOLFan.GUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.otherBox);
-            this.splitContainer1.Size = new System.Drawing.Size(526, 282);
+            this.splitContainer1.Size = new System.Drawing.Size(526, 232);
             this.splitContainer1.SplitterDistance = 313;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
@@ -126,7 +126,7 @@ namespace LOLFan.GUI
             this.fanBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fanBox.Location = new System.Drawing.Point(0, 0);
             this.fanBox.Name = "fanBox";
-            this.fanBox.Size = new System.Drawing.Size(313, 282);
+            this.fanBox.Size = new System.Drawing.Size(313, 232);
             this.fanBox.TabIndex = 3;
             this.fanBox.TabStop = false;
             this.fanBox.Text = "Fans";
@@ -137,7 +137,7 @@ namespace LOLFan.GUI
             this.fanBoxLayout.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.fanBoxLayout.Location = new System.Drawing.Point(3, 16);
             this.fanBoxLayout.Name = "fanBoxLayout";
-            this.fanBoxLayout.Size = new System.Drawing.Size(307, 263);
+            this.fanBoxLayout.Size = new System.Drawing.Size(307, 213);
             this.fanBoxLayout.TabIndex = 1;
             // 
             // otherBox
@@ -146,7 +146,7 @@ namespace LOLFan.GUI
             this.otherBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.otherBox.Location = new System.Drawing.Point(0, 0);
             this.otherBox.Name = "otherBox";
-            this.otherBox.Size = new System.Drawing.Size(209, 282);
+            this.otherBox.Size = new System.Drawing.Size(209, 232);
             this.otherBox.TabIndex = 0;
             this.otherBox.TabStop = false;
             this.otherBox.Text = "Other";
@@ -156,7 +156,7 @@ namespace LOLFan.GUI
             this.otherBoxLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.otherBoxLayout.Location = new System.Drawing.Point(3, 16);
             this.otherBoxLayout.Name = "otherBoxLayout";
-            this.otherBoxLayout.Size = new System.Drawing.Size(203, 263);
+            this.otherBoxLayout.Size = new System.Drawing.Size(203, 213);
             this.otherBoxLayout.TabIndex = 0;
             // 
             // Overview

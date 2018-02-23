@@ -675,7 +675,7 @@ namespace LOLFan.GUI {
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(425, 339);
+            this.tabControl1.Size = new System.Drawing.Size(477, 470);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -684,7 +684,7 @@ namespace LOLFan.GUI {
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(417, 313);
+            this.tabPage1.Size = new System.Drawing.Size(469, 444);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Overview";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -695,7 +695,7 @@ namespace LOLFan.GUI {
             this.overview.Location = new System.Drawing.Point(3, 3);
             this.overview.Name = "overview";
             this.overview.Settings = null;
-            this.overview.Size = new System.Drawing.Size(411, 307);
+            this.overview.Size = new System.Drawing.Size(463, 438);
             this.overview.TabIndex = 0;
             // 
             // tabPage2
@@ -704,7 +704,7 @@ namespace LOLFan.GUI {
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(417, 313);
+            this.tabPage2.Size = new System.Drawing.Size(469, 444);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Monitor";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -770,7 +770,7 @@ namespace LOLFan.GUI {
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(417, 313);
+            this.tabPage3.Size = new System.Drawing.Size(469, 444);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Options";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -788,8 +788,8 @@ namespace LOLFan.GUI {
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.numericUpDown1);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
-            this.splitContainer1.Size = new System.Drawing.Size(411, 307);
-            this.splitContainer1.SplitterDistance = 232;
+            this.splitContainer1.Size = new System.Drawing.Size(463, 438);
+            this.splitContainer1.SplitterDistance = 202;
             this.splitContainer1.TabIndex = 1;
             // 
             // lcdFormatText
@@ -851,7 +851,7 @@ namespace LOLFan.GUI {
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(417, 313);
+            this.tabPage4.Size = new System.Drawing.Size(469, 444);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Fan control";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -863,10 +863,10 @@ namespace LOLFan.GUI {
             this.groupBox2.Controls.Add(this.addGroupButton);
             this.groupBox2.Controls.Add(this.groupsListBox);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(3, 240);
+            this.groupBox2.Location = new System.Drawing.Point(3, 371);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.groupBox2.Size = new System.Drawing.Size(411, 70);
+            this.groupBox2.Size = new System.Drawing.Size(463, 70);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Controller groups";
@@ -883,7 +883,7 @@ namespace LOLFan.GUI {
             this.groupItemsListBox.Location = new System.Drawing.Point(202, 19);
             this.groupItemsListBox.Name = "groupItemsListBox";
             this.groupItemsListBox.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.groupItemsListBox.Size = new System.Drawing.Size(199, 124);
+            this.groupItemsListBox.Size = new System.Drawing.Size(251, 124);
             this.groupItemsListBox.TabIndex = 3;
             this.groupItemsListBox.ThreeDCheckBoxes = true;
             // 
@@ -932,7 +932,7 @@ namespace LOLFan.GUI {
             this.groupBox1.Controls.Add(this.newControllerButton);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(410, 231);
+            this.groupBox1.Size = new System.Drawing.Size(462, 444);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Fan controllers";
@@ -940,7 +940,7 @@ namespace LOLFan.GUI {
             // copyControllerButton
             // 
             this.copyControllerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.copyControllerButton.Location = new System.Drawing.Point(275, 79);
+            this.copyControllerButton.Location = new System.Drawing.Point(327, 79);
             this.copyControllerButton.Name = "copyControllerButton";
             this.copyControllerButton.Size = new System.Drawing.Size(107, 23);
             this.copyControllerButton.TabIndex = 9;
@@ -955,10 +955,11 @@ namespace LOLFan.GUI {
             | System.Windows.Forms.AnchorStyles.Right)));
             this.controllerListBox.CheckBoxes = true;
             this.controllerListBox.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.controllerListBox.HideSelection = false;
             this.controllerListBox.Location = new System.Drawing.Point(7, 19);
             this.controllerListBox.MultiSelect = false;
             this.controllerListBox.Name = "controllerListBox";
-            this.controllerListBox.Size = new System.Drawing.Size(261, 204);
+            this.controllerListBox.Size = new System.Drawing.Size(313, 343);
             this.controllerListBox.TabIndex = 8;
             this.controllerListBox.UseCompatibleStateImageBehavior = false;
             this.controllerListBox.View = System.Windows.Forms.View.Details;
@@ -966,7 +967,7 @@ namespace LOLFan.GUI {
             // removeControllerButton
             // 
             this.removeControllerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.removeControllerButton.Location = new System.Drawing.Point(274, 134);
+            this.removeControllerButton.Location = new System.Drawing.Point(326, 134);
             this.removeControllerButton.Name = "removeControllerButton";
             this.removeControllerButton.Size = new System.Drawing.Size(108, 23);
             this.removeControllerButton.TabIndex = 7;
@@ -977,7 +978,7 @@ namespace LOLFan.GUI {
             // editControllerButton
             // 
             this.editControllerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.editControllerButton.Location = new System.Drawing.Point(274, 49);
+            this.editControllerButton.Location = new System.Drawing.Point(326, 49);
             this.editControllerButton.Name = "editControllerButton";
             this.editControllerButton.Size = new System.Drawing.Size(108, 23);
             this.editControllerButton.TabIndex = 6;
@@ -988,7 +989,7 @@ namespace LOLFan.GUI {
             // newControllerButton
             // 
             this.newControllerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.newControllerButton.Location = new System.Drawing.Point(274, 19);
+            this.newControllerButton.Location = new System.Drawing.Point(326, 19);
             this.newControllerButton.Name = "newControllerButton";
             this.newControllerButton.Size = new System.Drawing.Size(108, 23);
             this.newControllerButton.TabIndex = 5;
@@ -1000,7 +1001,7 @@ namespace LOLFan.GUI {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(425, 339);
+            this.ClientSize = new System.Drawing.Size(477, 470);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu;

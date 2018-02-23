@@ -699,31 +699,16 @@ namespace LOLFan.GUI {
             lcdFormatText.Text = lcd.FormatString;
             if (lcd.ConnectionMode == DisplayConnector.LCDConnectionMode.NONE) lcdFormatText.Enabled = false;
 
-            /*foreach (ISensor s in sensors)
-            {
-                if (s.SensorType == SensorType.Fan && s.Affector != null)
-                {
-                    ControlSettings c = new ControlSettings(s, settings);
-                    c.ShowSettings();
-                    break;
-                }
-            }*/
+
+            // Fan controller tab initialisation
             fanControllerManager = new FanControllerManager(sensors, settings);
-            //FanController fc = new FanController(0, sensors, settings);
-            //fanControllerManager.AddController(fc);
-            //fc.Enabled = true;
-           // FanControlForm f = new FanControlForm(sensors, fanContr, settings);
-            //f.Show();
+
 
             // Fan controller list prep
             foreach (FanController c in fanControllerManager.Controllers)
             {
-                controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
-                c.enabledChanged += UpdateFanControllerEnableds;
-                c.NameChanged += UpdateFanControllerNames;
-                c.ControlChanged += UpdateFanControllerNames;
-                //controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
-            }
+                controllerListBox.AddItem(c);
+            }   
 
             controllerListBox.ItemCheck += delegate (Object sender, ItemCheckEventArgs e)
             {
@@ -790,30 +775,6 @@ namespace LOLFan.GUI {
                     sensor.Name = "HDD" + idx;
                     idx++;
                 }
-            }
-        }
-
-        public void UpdateFanControllerEnableds(object sender, EventArgs e)
-        {
-            for (int i = 0; i < fanControllerManager.Controllers.Count; i++)
-            {
-                if ((FanController) sender == fanControllerManager.Controllers[i]) 
-                    controllerListBox.SetItemChecked(i, fanControllerManager.Controllers[i].Enabled);
-                //controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
-            }
-        }
-
-        public void UpdateFanControllerNames(object sender, EventArgs e)
-        {
-            for (int i = 0; i < fanControllerManager.Controllers.Count; i++)
-            {
-                if ((FanController)sender == fanControllerManager.Controllers[i])
-                {
-                    controllerListBox.Items.RemoveAt(i);
-                    controllerListBox.Items.Insert(i, fanControllerManager.Controllers[i].Name + " (" + fanControllerManager.Controllers[i].Controlled.Affects.Name + ")");
-                    controllerListBox.SetItemChecked(i, fanControllerManager.Controllers[i].Enabled);
-                }
-                //controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
             }
         }
 
@@ -1318,9 +1279,11 @@ namespace LOLFan.GUI {
 
         private void editControllerButton_Click(object sender, EventArgs e)
         {
-            if (controllerListBox.SelectedIndex > -1)
+            if (controllerListBox.SelectedItems.Count > 0)
             {
-                fanControllerManager.Controllers[controllerListBox.SelectedIndex].ShowForm();
+
+                FanController c = controllerListBox.GetSelectedFanController();
+                if (c != null) c.ShowForm();
             }
         }
 
@@ -1333,10 +1296,7 @@ namespace LOLFan.GUI {
                 FanController c = new FanController(fanControllerManager.GetFreeControllerSlot(), sensors, settings);
 
                 fanControllerManager.AddController(c);
-                controllerListBox.Items.Add(c.Name + " (" + c.Controlled.Affects.Name + ")", c.Enabled);
-                c.enabledChanged += UpdateFanControllerEnableds;
-                c.NameChanged += UpdateFanControllerNames;
-                c.ControlChanged += UpdateFanControllerNames;
+                controllerListBox.AddItem(c);
 
                 c.ShowForm();
             } catch (Exception)
@@ -1347,16 +1307,16 @@ namespace LOLFan.GUI {
 
         private void removeControllerButton_Click(object sender, EventArgs e)
         {
-            if (controllerListBox.SelectedIndex == -1) return;
+            FanController c = controllerListBox.GetSelectedFanController();
+            if (c == null) return;
 
             if (MessageBox.Show("Do you really want to remove this fan controller?", "Remove", MessageBoxButtons.YesNo) == DialogResult.No) return;
 
-            fanControllerManager.Controllers[controllerListBox.SelectedIndex].DeleteFromSettings();                        
-            fanControllerManager.Controllers[controllerListBox.SelectedIndex].enabledChanged -= UpdateFanControllerEnableds;
-            fanControllerManager.Controllers[controllerListBox.SelectedIndex].CloseForm();
+            c.DeleteFromSettings();                        
+            c.CloseForm();
 
-            fanControllerManager.Controllers.Remove(fanControllerManager.Controllers[controllerListBox.SelectedIndex]);
-            controllerListBox.Items.Remove(controllerListBox.Items[controllerListBox.SelectedIndex]);
+            fanControllerManager.Controllers.Remove(c);
+            controllerListBox.RemoveItem(c);
             
         }
 

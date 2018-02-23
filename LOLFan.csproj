@@ -115,6 +115,9 @@
     <Compile Include="GUI\FanControlForm.Designer.cs">
       <DependentUpon>FanControlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\FanControllerListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GUI\HintsForm.cs">
       <SubType>Form</SubType>
     </Compile>

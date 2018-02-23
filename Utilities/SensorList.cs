@@ -67,6 +67,15 @@ namespace LOLFan.Utilities
             return GetByIdentifier(identifier.ToString());
         }
 
+        public ISensor GetByControl(IControl c)
+        {
+            foreach (ISensor s in this)
+            {
+                if (s.Control == c) return s;
+            }
+            return null;
+        }
+
         public SensorEventHandler SensorAdded;
         public SensorEventHandler SensorRemoved;
     }

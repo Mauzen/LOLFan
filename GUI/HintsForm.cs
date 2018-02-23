@@ -59,6 +59,9 @@ Below is the fan calibration, which measures the fans speeds, to allow a true li
             @"Here you may configure the automatic speed control for a fan.
 This is done by a speed curve, that covers a certain range. Horizontal X-Value is the input, Y-Value is the corresponding speed. If the fan control uses calibrated speed, it is linear, else it is the default fan speed duty.
 Left-click near the curve to create a new point, or Left-click on a point to drag it. Right-clicking on a point removes it.
+Middle-Mouse-Button pans the whole curve up/down.
+Middle-Mouse-Button+ALT scales the curve with the left-most point being the base.
+Middle-Mouse-Button+CTRL scales the curve with the right-most point being the base.
 
 First, select which fan control should be affected by this.
 Then you've got two options:

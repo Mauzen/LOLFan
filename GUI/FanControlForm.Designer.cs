@@ -46,6 +46,7 @@ namespace LOLFan.GUI
             this.label4 = new System.Windows.Forms.Label();
             this.maxUpDown = new System.Windows.Forms.NumericUpDown();
             this.minUpDown = new System.Windows.Forms.NumericUpDown();
+            this.tryRestartBox = new System.Windows.Forms.CheckBox();
             this.sourceSensorComboBox = new System.Windows.Forms.ComboBox();
             this.valueModeButton = new System.Windows.Forms.RadioButton();
             this.tempModeButton = new System.Windows.Forms.RadioButton();
@@ -59,7 +60,6 @@ namespace LOLFan.GUI
             this.valueTextBox = new System.Windows.Forms.TextBox();
             this.enabledCheckbox = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tryRestartBox = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -189,6 +189,17 @@ namespace LOLFan.GUI
             this.minUpDown.Size = new System.Drawing.Size(61, 20);
             this.minUpDown.TabIndex = 0;
             this.toolTip1.SetToolTip(this.minUpDown, "Scales the minimum value of the curve.");
+            // 
+            // tryRestartBox
+            // 
+            this.tryRestartBox.AutoSize = true;
+            this.tryRestartBox.Location = new System.Drawing.Point(332, 137);
+            this.tryRestartBox.Name = "tryRestartBox";
+            this.tryRestartBox.Size = new System.Drawing.Size(181, 17);
+            this.tryRestartBox.TabIndex = 13;
+            this.tryRestartBox.Text = "Restart fans that appear stopped";
+            this.toolTip1.SetToolTip(this.tryRestartBox, resources.GetString("tryRestartBox.ToolTip"));
+            this.tryRestartBox.UseVisualStyleBackColor = true;
             // 
             // sourceSensorComboBox
             // 
@@ -320,17 +331,6 @@ namespace LOLFan.GUI
             // toolTip1
             // 
             this.toolTip1.AutomaticDelay = 400;
-            // 
-            // tryRestartBox
-            // 
-            this.tryRestartBox.AutoSize = true;
-            this.tryRestartBox.Location = new System.Drawing.Point(332, 137);
-            this.tryRestartBox.Name = "tryRestartBox";
-            this.tryRestartBox.Size = new System.Drawing.Size(181, 17);
-            this.tryRestartBox.TabIndex = 13;
-            this.tryRestartBox.Text = "Restart fans that appear stopped";
-            this.toolTip1.SetToolTip(this.tryRestartBox, resources.GetString("tryRestartBox.ToolTip"));
-            this.tryRestartBox.UseVisualStyleBackColor = true;
             // 
             // FanControlForm
             // 

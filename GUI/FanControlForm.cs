@@ -27,6 +27,14 @@ namespace LOLFan.GUI
     public partial class FanControlForm : Form
     {
 
+        enum TransformMode
+        {
+            None,
+            Pan,
+            Scale_LeftMost,
+            Scale_RightMost
+        };
+
         private readonly PersistentSettings settings;
 
         private readonly Plot plot;
@@ -72,11 +80,10 @@ namespace LOLFan.GUI
 
             this.controllers = new List<IControl>();
 
-            this.FormBorderStyle = FormBorderStyle.SizableToolWindow;
-            this.ShowInTaskbar = false;
+            this.FormBorderStyle = FormBorderStyle.Sizable;
 
             this.plotLabel = new Label();
-            plotLabel.Text = "3434";
+            plotLabel.Text = "";
             plotLabel.BackColor = Color.Transparent;
             plotLabel.AutoSize = true;
             plotLabel.Visible = false;            
@@ -135,7 +142,6 @@ namespace LOLFan.GUI
             this.minUpDown.ValueChanged += new System.EventHandler(this.minMaxChanged);
             this.maxUpDown.ValueChanged += new System.EventHandler(this.minMaxChanged);
             this.valueModeButton.CheckedChanged += new System.EventHandler(this.valueModeButton_CheckedChanged);
-            this.tempModeButton.CheckedChanged += new System.EventHandler(this.tempModeButton_CheckedChanged);
             this.tryRestartBox.CheckedChanged += new System.EventHandler(this.tryRestartBox_CheckedChanged);
 
             control.enabledChanged += controller_enabledChanged;
@@ -316,6 +322,9 @@ namespace LOLFan.GUI
                 e.Handled = true;
             };
 
+            TransformMode transformMode = TransformMode.None;
+            ScreenPoint transformStart = new ScreenPoint();
+
             model.MouseDown += (s, e) =>
             {
                 if (e.ChangedButton == OxyMouseButton.Left)
@@ -346,8 +355,119 @@ namespace LOLFan.GUI
                     UpdateCurveTracker();
                     model.RefreshPlot(false);
                     e.Handled = true;
+                } else if (e.ChangedButton == OxyMouseButton.Middle)
+                {
+                    transformStart = e.Position;
+                    if (Control.ModifierKeys == Keys.Alt)
+                    {
+                        plot.SetCursorType(CursorType.ZoomVertical);
+                        transformMode = TransformMode.Scale_LeftMost;
+                    } else if (Control.ModifierKeys == Keys.Control)
+                    {
+                        plot.SetCursorType(CursorType.ZoomVertical);
+                        transformMode = TransformMode.Scale_RightMost;
+                    }
+                    else
+                    {
+                        plot.SetCursorType(CursorType.Pan);
+                        transformMode = TransformMode.Pan;
+                    }
+                    e.Handled = true;
                 }
 
+            };
+
+            model.MouseUp += (s, e) =>
+            {
+                transformMode = TransformMode.None;
+                plot.SetCursorType(CursorType.Default);
+                e.Handled = true;
+            };
+
+            model.MouseMove += (s, e) =>
+            {
+
+                if (transformMode == TransformMode.Pan)
+                {
+                    float shiftAmount = (float)(data.InverseTransform(e.Position).Y - data.InverseTransform(transformStart).Y);
+                    // Up/Down shift transformation
+                    // Check if any point would leave bounds
+                    foreach (PointF p in control.Curve)
+                    {
+                        if ((p.Y + shiftAmount > 100) || (p.Y + shiftAmount < 0))
+                        {
+                            transformStart = e.Position;
+                            e.Handled = true;
+                            return;
+                        }
+                    }
+                    // If bounds are ok, do the shift
+                    for (int i = 0; i < control.Curve.Count; i++)
+                    {
+                        PointF p = control.Curve[i];
+                        p.Y += shiftAmount;
+                        control.Curve[i] = p;
+                        data.Points[i] = new DataPoint(p.X, p.Y);
+                    }
+
+                }
+                else if (transformMode == TransformMode.Scale_RightMost)
+                {
+                    float scaleAmount = 1f - (float)(data.InverseTransform(e.Position).Y - data.InverseTransform(transformStart).Y) / 200f;
+                    float constValue = 100f - control.Curve[control.Curve.Count - 1].Y;
+
+                    foreach (PointF p in control.Curve)
+                    {
+                        if ((100f - (100f - p.Y - constValue) * scaleAmount - constValue > 100f)
+                            || (100f - (100f - p.Y - constValue) * scaleAmount - constValue < 0f))
+                        {
+                            transformStart = e.Position;
+                            e.Handled = true;
+                            return;
+                        }
+                    }
+                    // If bounds are ok, do the scaling
+                    for (int i = 0; i < control.Curve.Count; i++)
+                    {
+                        PointF p = control.Curve[i];
+                        p.Y = 100f - (100f - p.Y - constValue) * scaleAmount - constValue;
+                        control.Curve[i] = p;
+                        data.Points[i] = new DataPoint(p.X, p.Y);
+                    }
+
+                }
+                else if (transformMode == TransformMode.Scale_LeftMost)
+                {
+                    float scaleAmount = 1f + (float)(data.InverseTransform(e.Position).Y - data.InverseTransform(transformStart).Y) / 200f;
+                    float constValue = control.Curve[0].Y;
+
+                    foreach (PointF p in control.Curve)
+                    {
+                        if (((p.Y - constValue) * scaleAmount + constValue > 100f)
+                            || ((p.Y - constValue) * scaleAmount + constValue < 0f))
+                        {
+                            transformStart = e.Position;
+                            e.Handled = true;
+                            return;
+                        }
+                    }
+                    // If bounds are ok, do the scaling
+                    for (int i = 0; i < control.Curve.Count; i++)
+                    {
+                        PointF p = control.Curve[i];
+                        p.Y = (p.Y - constValue) * scaleAmount + constValue;
+                        control.Curve[i] = p;
+                        data.Points[i] = new DataPoint(p.X, p.Y);
+                    }
+                }
+                else
+                {
+                    return;
+                }
+
+                InvalidatePlot();
+                transformStart = e.Position;
+                e.Handled = true;
             };
             return model;
         }
@@ -460,11 +580,6 @@ namespace LOLFan.GUI
                 valueTextBox.Enabled = false;
                 sourceSensorComboBox.Enabled = true;
             }
-        }
-
-        private void tempModeButton_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void sourceSensorComboBox_SelectedIndexChanged(object sender, EventArgs e)

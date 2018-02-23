@@ -169,7 +169,8 @@ namespace LOLFan.Utilities
         {
             if (controlForm != null && controlForm.Visible)
             {
-                controlForm.Focus();
+                controlForm.WindowState = System.Windows.Forms.FormWindowState.Normal;
+                controlForm.Focus();                
                 return;
             }
             

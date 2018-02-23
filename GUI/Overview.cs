@@ -116,7 +116,7 @@ namespace LOLFan.GUI
             }
         }
 
-        private void tempFanSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)S
+        private void tempFanSplitContainer_SplitterMoved(object sender, SplitterEventArgs e)
         {
             if (settings != null) settings.SetValue("Overview.Splitter1.Distance", tempFanSplitContainer.SplitterDistance);
         }

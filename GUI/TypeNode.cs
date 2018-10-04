@@ -31,7 +31,7 @@ namespace LOLFan.GUI {
                     break;
                 case SensorType.KWH:
                     this.Image = Utilities.EmbeddedResources.GetImage("voltage.png");
-                    this.Text = "kW/h";
+                    this.Text = "kWh";
                     break;
                 case SensorType.Clock:
           this.Image = Utilities.EmbeddedResources.GetImage("clock.png");

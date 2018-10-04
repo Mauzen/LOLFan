@@ -31,7 +31,7 @@ namespace LOLFan.Hardware {
     SmallData = 2048, // MB = 2^20 Bytes
     TinyData = 4096, // KB = 2^10 Bytes
     Current = 8192, // A
-    KWH = 16384// kW/h consumption
+    KWH = 16384// kWh consumption
   }
 
   public struct SensorValue {

@@ -56,7 +56,7 @@ namespace LOLFan.GUI {
         case SensorType.SmallData: format = "{0:F1} MB"; break;
                 case SensorType.TinyData: format = "{0:F0} KB"; break;
                 case SensorType.Factor: format = "{0:F3}"; break;
-                case SensorType.KWH: format = "{0:F5} kW/h"; break;
+                case SensorType.KWH: format = "{0:F5} kWh"; break;
                 case SensorType.Current: format = "{0:F5} A"; break;
 
             }

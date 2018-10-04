@@ -150,7 +150,7 @@ namespace LOLFan.GUI {
       units.Add(SensorType.Power, "W");
       units.Add(SensorType.Data, "GB");
       units.Add(SensorType.Current, "A");
-      units.Add(SensorType.KWH, "kW/h");
+      units.Add(SensorType.KWH, "kWh");
 
             foreach (SensorType type in Enum.GetValues(typeof(SensorType))) {
         var axis = new LinearAxis();

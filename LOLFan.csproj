@@ -181,6 +181,12 @@
     <Compile Include="GUI\UpdateVisitor.cs" />
     <Compile Include="GUI\UserOption.cs" />
     <Compile Include="GUI\UserRadioGroup.cs" />
+    <Compile Include="GUI\VirtualSensorEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\VirtualSensorEditForm.Designer.cs">
+      <DependentUpon>VirtualSensorEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Utilities\DisplayConnector.cs" />
     <Compile Include="Utilities\FanController.cs" />
@@ -212,6 +218,7 @@
     <Compile Include="Utilities\SensorString.cs" />
     <Compile Include="Utilities\SharedData.cs" />
     <Compile Include="Utilities\ValueString.cs" />
+    <Compile Include="Utilities\VirtualSensor.cs" />
     <Compile Include="WMI\Hardware.cs" />
     <Compile Include="WMI\IWmiObject.cs" />
     <Compile Include="WMI\Sensor.cs" />
@@ -241,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PortForm.resx">
       <DependentUpon>PortForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\VirtualSensorEditForm.resx">
+      <DependentUpon>VirtualSensorEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\ati.png">
     </EmbeddedResource>

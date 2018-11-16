@@ -24,7 +24,7 @@ namespace LOLFan.Hardware {
     private string name;
     private readonly int index;
     private readonly bool defaultHidden;
-    private readonly SensorType sensorType;
+    protected SensorType sensorType;
     private readonly Hardware hardware;
     private readonly ReadOnlyArray<IParameter> parameters;
     private float? currentValue;
@@ -32,7 +32,7 @@ namespace LOLFan.Hardware {
     private float? maxValue;
     private readonly RingCollection<SensorValue> 
       values = new RingCollection<SensorValue>();
-    private readonly ISettings settings;
+    protected readonly ISettings settings;
     private IControl control;
     private ISensor affector;
   

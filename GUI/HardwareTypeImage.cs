@@ -65,7 +65,10 @@ namespace LOLFan.GUI {
             break;
           case HardwareType.Peripheral:
             image = Utilities.EmbeddedResources.GetImage("bigng.png");
-            break;
+             break;
+          case HardwareType.Virtual:
+             image = Utilities.EmbeddedResources.GetImage("bigng.png");
+             break;
           default:
             image = new Bitmap(1, 1);
             break;

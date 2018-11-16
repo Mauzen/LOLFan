@@ -24,7 +24,8 @@ namespace LOLFan.Hardware {
     Heatmaster,
     HDD,
     External,
-    Peripheral
+    Peripheral,
+    Virtual
   }
 
   public interface IHardware : IElement {

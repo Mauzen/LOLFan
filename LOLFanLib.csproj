@@ -165,7 +165,9 @@
     <Compile Include="Collections\ListSet.cs" />
     <Compile Include="Hardware\PInvokeDelegateFactory.cs" />
     <Compile Include="Collections\ReadOnlyArray.cs" />
-    <Compile Include="Hardware\VirtualSensor.cs" />
+    <Compile Include="Hardware\Virtual\IVirtualSensor.cs" />
+    <Compile Include="Hardware\Virtual\VirtualSensorContainer.cs" />
+    <Compile Include="Hardware\Virtual\VirtualGroup.cs" />
     <Compile Include="Properties\AssemblyLibInfo.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="Hardware\ThreadAffinity.cs" />

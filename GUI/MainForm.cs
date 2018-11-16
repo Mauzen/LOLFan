@@ -10,7 +10,6 @@
     Copyright (C) 2017 Michel Soll <msoll@web.de>
 
 */
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,9 +26,11 @@ using LOLFan.Utilities;
 using System.Diagnostics;
 using System.Threading;
 using System.Globalization;
+using LOLFan.Hardware.Virtual;
 
 namespace LOLFan.GUI {
   public partial class MainForm : Form {
+    static readonly int MAX_VIRTUAL_CONTAINERS = 32;
 
     private PersistentSettings settings;
     private UnitManager unitManager;
@@ -197,8 +198,12 @@ namespace LOLFan.GUI {
       computer.HardwareAdded += new HardwareEventHandler(HardwareAdded);
       computer.HardwareRemoved += new HardwareEventHandler(HardwareRemoved);
 
+      SharedData.AllSensors = new SensorList();
 
       computer.Open();
+
+      LoadVirtualSensorContainers();            
+            
             
 
       overview.Settings = settings;
@@ -382,6 +387,30 @@ namespace LOLFan.GUI {
                      
             
     }
+
+        
+        private void LoadVirtualSensorContainers()
+        {
+            for (int i = 0; i < MAX_VIRTUAL_CONTAINERS; i++)
+            {
+                if (settings.Contains(new Identifier("virtual", i+"", "sensorindex").ToString())) {
+                    VirtualSensorContainer cont = new VirtualSensorContainer("Virtual Sensor Container " + i, new Identifier("virtual", i+""), settings);
+                    int sensorIdx;
+                    int.TryParse(settings.GetValue(new Identifier("virtual", i + "", "sensorindex").ToString(), "0"), out sensorIdx);
+                    // Load sensors
+                    for (int si = 0; si < sensorIdx; si++)
+                    {
+                        if (settings.Contains(new Identifier("virtual", i + "", si+"", "sensortype").ToString()))
+                        {
+                            VirtualSensor s = new VirtualSensor("Virtual Sensor " + si, si, SensorType.Temperature, cont, settings);
+                            cont.AddVirtualSensor(s);
+                        }
+                    }
+                    computer.AddVirtualSensorContainer(cont);
+                }
+            }
+            
+        }
 
         private void GroupItemsListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -690,8 +719,7 @@ namespace LOLFan.GUI {
             // Delayed init stuff that requires sensor data
             sensors = new List<ISensor>();
             sensors.AddRange(fetchSensors(computer));
-
-            SharedData.AllSensors = new SensorList();
+            
             SharedData.AllSensors.AddRange(sensors);
 
 
@@ -1076,8 +1104,31 @@ namespace LOLFan.GUI {
             treeContextMenu.MenuItems.Add(controlItem);
           }
 
-          treeContextMenu.Show(treeView, new Point(m.X, m.Y));
-        }
+                    if (node.Sensor.Hardware is VirtualSensorContainer)
+                    {
+                        treeContextMenu.MenuItems.Add(new MenuItem("-"));
+                        MenuItem virtualSettingsItem = new MenuItem("Configure Virtual Sensor...");
+                        virtualSettingsItem.Click += delegate (object obj, EventArgs args)
+                        {
+                            VirtualSensorEditForm f = new VirtualSensorEditForm(node.Sensor as VirtualSensor, settings);
+                            f.Show();
+                        };
+                        treeContextMenu.MenuItems.Add(virtualSettingsItem);
+
+                        MenuItem removeVirtualItem = new MenuItem("Delete Virtual Sensor");
+                        removeVirtualItem.Click += delegate (object obj, EventArgs args)
+                        {
+                            VirtualSensor s = node.Sensor as VirtualSensor;
+                            VirtualSensorContainer cont = s.Hardware as VirtualSensorContainer;
+                            cont.RemoveVirtualSensor(s);
+                            s.DeleteFromConfig();
+                            
+                        };
+                        treeContextMenu.MenuItems.Add(removeVirtualItem);
+                    }
+
+                    treeContextMenu.Show(treeView, new Point(m.X, m.Y));
+       }
 
         HardwareNode hardwareNode = info.Node.Tag as HardwareNode;
         if (hardwareNode != null && hardwareNode.Hardware != null) {
@@ -1090,6 +1141,23 @@ namespace LOLFan.GUI {
             };
             treeContextMenu.MenuItems.Add(item);
           }
+          if (hardwareNode.Hardware is VirtualSensorContainer)
+                    {
+                        item = new MenuItem("Add Virtual Sensor...");
+                        item.Click += delegate (object obj, EventArgs args) {
+                            VirtualSensorEditForm f = new VirtualSensorEditForm(null, settings);
+                            f.ShowDialog();
+                            if (f.DialogResult == DialogResult.OK)
+                            {
+                                VirtualSensorContainer c = hardwareNode.Hardware as VirtualSensorContainer;
+                                int idx = c.GetNextSensorIndex();
+                                VirtualSensor s = new VirtualSensor("Virtual Sensor " + idx, idx, f.SensorType, c, settings);
+                                s.ValueStringInput = f.ValueStringInput;
+                                c.AddVirtualSensor(s);
+                            }
+                        };
+                        treeContextMenu.MenuItems.Add(item);
+                    }
         if (hardwareNode.IsVisible)
         {
             item = new MenuItem("Hide");

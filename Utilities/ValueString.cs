@@ -42,6 +42,7 @@ namespace LOLFan.Utilities
         private List<RefType> type;
 
         private string input;
+        private bool parsed;
 
         private Expression exp;
 
@@ -60,6 +61,10 @@ namespace LOLFan.Utilities
             type = new List<RefType>();
             int count = 0;
             bool replaced;
+
+            // [] reserved for ncalc variables
+            input = input.Replace('[', ' ').Replace(']', ' ');
+
             string converted = input;
             Match m = Regex.Match(input, "{([a-zA-Z0-9/]+)(,min|,max|,val|,rel|,cal)?}");
             while (m.Success)
@@ -95,14 +100,16 @@ namespace LOLFan.Utilities
                         break;
                     }
                 }
+                parsed = true;
                 if (!replaced)
                 {
                     // Sensor not found
                     used.Add(null);
                     type.Add(RefType.NONE);
                     converted = converted.Replace(m.Groups[0].ToString(), "[" + count + "]");
+                    parsed = false;
                 }
-
+                
                 count++;
                 m = m.NextMatch();
             }
@@ -184,8 +191,7 @@ namespace LOLFan.Utilities
             {
                 if (input != value)
                 {
-                    // [] reserved for ncalc variables
-                    this.input = value.Replace('[', ' ').Replace(']', ' ');
+                    this.input = value;
                     ConvertInput();
                 }
             }
@@ -195,6 +201,11 @@ namespace LOLFan.Utilities
         {
             get
             {
+                if (!parsed)
+                {
+                    // If conversion failed due to missing sensors, try again
+                    ConvertInput();
+                }
                 return ParseOutput();
             }
         }

@@ -14,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using System.Security.Permissions;
 using System.Reflection;
+using LOLFan.Hardware.Virtual;
 
 namespace LOLFan.Hardware {
 
@@ -32,6 +33,8 @@ namespace LOLFan.Hardware {
     private bool gpuEnabled;
     private bool fanControllerEnabled;
     private bool hddEnabled;
+
+    private VirtualGroup virtualGroup;
 
 
     public Computer() {
@@ -110,6 +113,9 @@ namespace LOLFan.Hardware {
       Add(new External.ExternalGroup(settings));
 
       Add(new Peripheral.PeripheralGroup(settings));
+
+      virtualGroup = new VirtualGroup(settings);
+      Add(virtualGroup);
 
       open = true;
     }
@@ -385,6 +391,21 @@ namespace LOLFan.Hardware {
           hardware.Accept(visitor);
     }
 
+        public void AddVirtualSensorContainer(VirtualSensorContainer cont)
+        {
+            VirtualGroup.Add(cont);
+            HardwareAdded(cont);
+
+        }
+
+        public VirtualGroup VirtualGroup
+        {
+            get
+            {
+                return virtualGroup;
+            }
+        }
+
     private class Settings : ISettings {
 
       public bool Contains(string name) {
@@ -398,6 +419,7 @@ namespace LOLFan.Hardware {
       }
 
       public void Remove(string name) { }
+      
     }
   }
 }

@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using LOLFan.Collections;
 
 // A string containing sensor identifiers
 // that are supposed to be translated to their
@@ -29,17 +30,19 @@ namespace LOLFan.Utilities
 
         enum RefType
         {
-            NONE,
-            VALUE,
-            MIN,
-            MAX,
-            REL,
-            CAL
+            NONE,       // Invalid
+            VALUE,      // Current value
+            MIN,        // Minimum value
+            MAX,        // Maximum value
+            REL,        // Percentage between min and max
+            CAL,        // Calibrated value (fans)
+            PREV        // Previous values
         }
 
         private List<ISensor> sensors;
         private List<ISensor> used;
         private List<RefType> type;
+        private List<int> param;
 
         private string input;
         private bool parsed;
@@ -59,6 +62,7 @@ namespace LOLFan.Utilities
         {
             used = new List<ISensor>();
             type = new List<RefType>();
+            param = new List<int>();
             int count = 0;
             bool replaced;
 
@@ -66,7 +70,7 @@ namespace LOLFan.Utilities
             input = input.Replace('[', ' ').Replace(']', ' ');
 
             string converted = input;
-            Match m = Regex.Match(input, "{([a-zA-Z0-9/]+)(,min|,max|,val|,rel|,cal)?}");
+            Match m = Regex.Match(input, "{([a-zA-Z0-9/]+)(,min|,max|,val|,rel|,cal|,prv([0-9]+))?}");
             while (m.Success)
             {
                 replaced = false;
@@ -76,25 +80,35 @@ namespace LOLFan.Utilities
                     {
                         used.Add(sensors[i]);                        
                         converted = converted.Replace(m.Groups[0].ToString(), "[" + count + "]");
-                        if (m.Groups[2].ToString() == ",min")
+
+                        if (m.Groups[2].ToString().StartsWith(",prv"))
                         {
-                            type.Add(RefType.MIN);
-                        }
-                        else if (m.Groups[2].ToString() == ",max")
-                        {
-                            type.Add(RefType.MAX);
-                        }
-                        else if (m.Groups[2].ToString() == ",rel")
-                        {
-                            type.Add(RefType.REL);
-                        }
-                        else if (m.Groups[2].ToString() == ",cal")
-                        {
-                            type.Add(RefType.CAL);
+                            param.Add(int.Parse(m.Groups[3].ToString()));
+                            type.Add(RefType.PREV);
                         }
                         else
                         {
-                            type.Add(RefType.VALUE);
+                            if (m.Groups[2].ToString() == ",min")
+                            {
+                                type.Add(RefType.MIN);
+                            }
+                            else if (m.Groups[2].ToString() == ",max")
+                            {
+                                type.Add(RefType.MAX);
+                            }
+                            else if (m.Groups[2].ToString() == ",rel")
+                            {
+                                type.Add(RefType.REL);
+                            }
+                            else if (m.Groups[2].ToString() == ",cal")
+                            {
+                                type.Add(RefType.CAL);
+                            }
+                            else
+                            {
+                                type.Add(RefType.VALUE);
+                            }
+                            param.Add(0);
                         }
                         replaced = true;
                         break;
@@ -136,6 +150,10 @@ namespace LOLFan.Utilities
                             break;
                         case RefType.VALUE:
                             exp.Parameters[i + ""] = (used[i].Value.HasValue ? used[i].Value.Value : 0);
+                            break;
+                        case RefType.PREV:
+                            RingCollection<SensorValue> vals = used[i].Values as RingCollection<SensorValue>;
+                            exp.Parameters[i + ""] = GetPreviousValue(vals, param[i]);
                             break;
                         case RefType.MAX:
                             exp.Parameters[i + ""] = (used[i].Max.HasValue ? used[i].Max.Value : 0);
@@ -179,7 +197,15 @@ namespace LOLFan.Utilities
             }
         }
 
-
+        private static float GetPreviousValue(RingCollection<SensorValue> vals, int seconds)
+        {
+            for (int i = vals.Count-1; i>0; i--)
+            {
+                if ((DateTime.UtcNow - vals[i].Time).TotalSeconds > seconds) break;
+                if ((DateTime.UtcNow - vals[i].Time).TotalSeconds < seconds && (DateTime.UtcNow - vals[i - 1].Time).TotalSeconds >= seconds) return vals[i - 1].Value;
+            }
+            return vals[vals.Count-1].Value;
+        }
 
         public string Input
         {

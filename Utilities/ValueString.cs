@@ -135,7 +135,7 @@ namespace LOLFan.Utilities
 
         }
 
-        private float ParseOutput()
+        private float ParseOutput(DateTime? time = null)
         {
             if (exp == null) return float.PositiveInfinity;
             object[] values = new object[used.Count];
@@ -149,7 +149,14 @@ namespace LOLFan.Utilities
                             exp.Parameters[i + ""] = 0;
                             break;
                         case RefType.VALUE:
-                            exp.Parameters[i + ""] = (used[i].Value.HasValue ? used[i].Value.Value : 0);
+                            if (time.HasValue)
+                            {
+                                exp.Parameters[i + ""] = GetValueAtTime(used[i].Values as RingCollection<SensorValue>, time.Value);
+                            }
+                            else
+                            {
+                                exp.Parameters[i + ""] = (used[i].Value.HasValue ? used[i].Value.Value : 0);
+                            }
                             break;
                         case RefType.PREV:
                             RingCollection<SensorValue> vals = used[i].Values as RingCollection<SensorValue>;
@@ -207,6 +214,52 @@ namespace LOLFan.Utilities
             return vals[vals.Count-1].Value;
         }
 
+        private static float GetValueAtTime(RingCollection<SensorValue> values, DateTime time)
+        {
+            for (int i = values.Count - 1; i > 0; i--)
+            {
+                if (time > values[i].Time) break;
+                if (time < values[i].Time && time >= values[i - 1].Time)
+                {
+                    time = values[i - 1].Time;
+                    return values[i - 1].Value;
+                }
+            }
+            return values[values.Count - 1].Value;
+        }
+
+        public RingCollection<SensorValue> CreateHistory(RingCollection<SensorValue> values)
+        {
+            //DateTime last = values.Last.Time;
+           // DateTime cur = last;
+            values.Clear();
+            // Create a sorted list of all sensor log times
+            List<DateTime> times = new List<DateTime>();
+            foreach (ISensor s in used)
+            {
+                foreach (SensorValue v in s.Values)
+                {
+                    times.Add(v.Time);
+                }
+            }
+            times.Sort((a, b) => b.CompareTo(a));
+           // float lastval = float.NaN;
+            foreach (DateTime cur in times) 
+            //while ((last - cur).TotalSeconds <= 24*60*60)
+            {
+                float val = ParseOutput(cur);
+               // if (lastval != val)
+                //{
+                    values.Append(new SensorValue(val, cur));
+                //    lastval = val;
+                //}
+                //cur = cur.AddSeconds(-4);
+            }
+            values.Last = new SensorValue(ParseOutput(), DateTime.UtcNow);
+
+            return values;
+        } 
+
         public string Input
         {
             get
@@ -232,6 +285,7 @@ namespace LOLFan.Utilities
                     // If conversion failed due to missing sensors, try again
                     ConvertInput();
                 }
+                DateTime t = DateTime.UtcNow;
                 return ParseOutput();
             }
         }

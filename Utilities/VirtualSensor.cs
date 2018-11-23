@@ -41,6 +41,7 @@ namespace LOLFan.Utilities
                 {
                     val.Input = value;
                     this.settings.SetValue(new Identifier(Identifier, "valuestring").ToString(), value);
+                    val.CreateHistory(Values as RingCollection<SensorValue>);
                 }
             }
         }

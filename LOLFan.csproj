@@ -124,6 +124,12 @@
     <Compile Include="GUI\HintsForm.Designer.cs">
       <DependentUpon>HintsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\LCDTextForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\LCDTextForm.Designer.cs">
+      <DependentUpon>LCDTextForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Overview.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -240,6 +246,9 @@
     <EmbeddedResource Include="GUI\HintsForm.resx">
       <DependentUpon>HintsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\LCDTextForm.resx">
+      <DependentUpon>LCDTextForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Overview.resx">
       <DependentUpon>Overview.cs</DependentUpon>
     </EmbeddedResource>
@@ -270,6 +279,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\app.manifest">
       <SubType>Designer</SubType>
     </None>

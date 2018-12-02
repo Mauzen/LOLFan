@@ -26,7 +26,7 @@ using System.Windows.Forms;
 namespace LOLFan.Utilities
 {
 
-    class DisplayConnector
+    public class DisplayConnector
     {
         public enum LCDConnectionMode
         {
@@ -42,7 +42,8 @@ namespace LOLFan.Utilities
         private List<ISensor> sensors;
         private Arduino arduino;
 
-        private SensorString text;
+        private List<SensorString> text;
+        private int curText;
 
 
         public DisplayConnector(IHardware[] hardware, List<ISensor> sensors, PersistentSettings settings)
@@ -64,19 +65,20 @@ namespace LOLFan.Utilities
             }
 
 
-            // Network traffic
-            /*interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            lastSent = new long[interfaces.Length];
-            lastReceived = new long[interfaces.Length];
-            for (int i = 0; i < interfaces.Length; i++)
+            text = new List<SensorString>();
+
+            this.curText = 0;
+            int.TryParse(settings.GetValue(new Identifier(identifier, "curText").ToString(), "0"), out this.curText);
+
+            int curID = 0;
+            while (settings.Contains(new Identifier(identifier, curID + "", "text").ToString()))
             {
-                lastSent[i] = interfaces[i].GetIPv4Statistics().BytesSent;
-                lastReceived[i] = interfaces[i].GetIPv4Statistics().BytesReceived;
+                text.Add(new SensorString(settings.GetValue(new Identifier(identifier, curID + "", "text").ToString(), "-"), sensors));
+                curID++;
             }
-            sw = Stopwatch.StartNew();            */
+            if (text.Count == 0) text.Add(new SensorString("-", sensors));
 
-
-            this.text = new SensorString(settings.GetValue(new Identifier(identifier, "text").ToString(), "-"), sensors);
+            // this.text = new List<SensorString>(new SensorString(settings.GetValue(new Identifier(identifier, curText + "", "text").ToString(), "-"), sensors);
 
             if (mode == LCDConnectionMode.SERIAL)
             {
@@ -106,14 +108,79 @@ namespace LOLFan.Utilities
                     {
                         ToggleDisplay();
                     });
+                    settings.hotkeyManager.RegisterHotkey("next_display_text", 0x0002 + 0x0004, (int)Keys.J, delegate
+                    {
+                        if (CurText + 1 > text.Count - 1) CurText = 0;
+                        else CurText = CurText + 1;
+                    });
+                    settings.hotkeyManager.RegisterHotkey("prev_display_text", 0x0002 + 0x0004, (int)Keys.K, delegate
+                    {
+                        if (CurText - 1 < 0) CurText = text.Count - 1;
+                        else CurText = CurText - 1;
+                    });
                 }
 
 
             }
            
         }
-       
-        
+
+        public void AddSensorString(string stext)
+        {
+            text.Add(new SensorString(stext, sensors));
+            int id = text.Count - 1;
+            settings.SetValue(new Identifier(identifier, id + "", "text").ToString(), stext);
+        }
+
+        public bool RemoveSensorString(int id)
+        {
+            if (text.Count == 1) return false;
+
+            // Update IDs for all following SensorStrings
+            for (int i = text.Count - 1; i > id; i--)
+            {
+                settings.SetValue(new Identifier(identifier, i-1 + "", "text").ToString(), text[i].Input);
+            }
+            text.RemoveAt(id);
+            settings.Remove(new Identifier(identifier, text.Count + "", "text").ToString());
+
+            if (curText >= id)
+            {
+                curText--;
+            }
+            return true;
+        }
+
+        public void SwapSensorStrings(int a, int b)
+        {
+            SensorString oldA = text[a];
+            text[a] = text[b];
+            text[b] = oldA;
+
+            settings.SetValue(new Identifier(identifier, a + "", "text").ToString(), text[a].Input);
+            settings.SetValue(new Identifier(identifier, b + "", "text").ToString(), text[b].Input);
+        }
+
+        // TODO
+        public void InsertSensorStrings(int a, int b)
+        {
+            SensorString oldA = text[a];
+            text[a] = text[b];
+            text[b] = oldA;
+
+            settings.SetValue(new Identifier(identifier, a + "", "text").ToString(), text[a].Input);
+            settings.SetValue(new Identifier(identifier, b + "", "text").ToString(), text[b].Input);
+        }
+
+        public void ChangeSensorStringInput(int idx, string stext)
+        {
+            text[idx].Input = stext;
+            settings.SetValue(new Identifier(identifier, idx + "", "text").ToString(), stext);
+            if (idx == curText)
+            {
+                Update();
+            }
+        }
 
 
         public void Update()
@@ -123,36 +190,9 @@ namespace LOLFan.Utilities
             {
                 case LCDConnectionMode.SERIAL:
                 case LCDConnectionMode.ARDUINO:
-                    // Network traffic
-                   /* float sent = 0;
-                    float received = 0;
-                    for (int i = 0; i < interfaces.Length; i++)
-                    {
-                        sent += interfaces[i].GetIPv4Statistics().BytesSent - lastSent[i];
-                        lastSent[i] = interfaces[i].GetIPv4Statistics().BytesSent;
-                        received += interfaces[i].GetIPv4Statistics().BytesReceived - lastReceived[i];
-                        lastReceived[i] = interfaces[i].GetIPv4Statistics().BytesReceived;
-                    }
-                    sent = (sent / (sw.ElapsedMilliseconds / 1000)) / 1024;
-                    received = (received / (sw.ElapsedMilliseconds / 1000)) / 1024;
-                    sw.Reset();
-                    sw.Start();
 
-                    if (sent > 1000) sent = 0;
-                    if (received > 10000) received = 0;*/
-
-                    //string s = string.Format("{0,3:F0}", sent);
-                    //string r = string.Format("{0,4:F0}", received);
-
-                    string output = text.Output.Replace("TIME", DateTime.Now.ToString("HH:mm"));
-                    //output = output.Replace("NET_UP", s);
-                    //output = output.Replace("NET_DOWN", r);
+                    string output = text[curText].Output.Replace("TIME", DateTime.Now.ToString("HH:mm"));
                     arduino.DisplayText = output;
-                    //port.Write(ParseFormatText());
-                    //char[] text = ParseFormatText().ToCharArray();
-                    //port.Write(text,0, (text.Length<40?text.Length:40));
-
-                    //if (text.Length >= 40) port.Write(text, 40, text.Length-40);
                     break;
             }
 
@@ -174,15 +214,40 @@ namespace LOLFan.Utilities
         {
             get
             {
-                return text.Input;
+                return text[curText].Input;
             }
             set
             {
-                if (text.Input != value)
+                if (text[curText].Input != value)
                 {
-                    text.Input = value;
-                    settings.SetValue(new Identifier(identifier, "text").ToString(), value);
+                    text[curText].Input = value;
+                    settings.SetValue(new Identifier(identifier, curText + "", "text").ToString(), value);
                 }
+            }
+        }
+
+        public int CurText
+        {
+            get
+            {
+                return curText;
+            }
+            set
+            {
+                if (curText != value)
+                {
+                    curText = value;
+                    settings.SetValue(new Identifier(identifier, "curText").ToString(), curText);
+                    Update();
+                }
+            }
+        }
+
+        public List<SensorString> Text
+        {
+            get
+            {
+                return text;
             }
         }
 

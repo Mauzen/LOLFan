@@ -136,6 +136,8 @@ namespace LOLFan.GUI {
             this.removeControllerButton = new System.Windows.Forms.Button();
             this.editControllerButton = new System.Windows.Forms.Button();
             this.newControllerButton = new System.Windows.Forms.Button();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -408,7 +410,9 @@ namespace LOLFan.GUI {
             this.logSensorsMenuItem,
             this.loggingIntervalMenuItem,
             this.webMenuItemSeparator,
-            this.webMenuItem});
+            this.webMenuItem,
+            this.menuItem9,
+            this.menuItem10});
             this.optionsMenuItem.Text = "Options";
             // 
             // startMinMenuItem
@@ -997,6 +1001,17 @@ namespace LOLFan.GUI {
             this.newControllerButton.UseVisualStyleBackColor = true;
             this.newControllerButton.Click += new System.EventHandler(this.newControllerButton_Click);
             // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 12;
+            this.menuItem9.Text = "-";
+            // 
+            // menuItem10
+            // 
+            this.menuItem10.Index = 13;
+            this.menuItem10.Text = "LCD display text...";
+            this.menuItem10.Click += new System.EventHandler(this.menuItem10_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1131,6 +1146,8 @@ namespace LOLFan.GUI {
         private System.Windows.Forms.MenuItem menuItem8;
         private GUI.FanControllerListView controllerListBox;
         private System.Windows.Forms.Button copyControllerButton;
+        private System.Windows.Forms.MenuItem menuItem9;
+        private System.Windows.Forms.MenuItem menuItem10;
     }
 }
 

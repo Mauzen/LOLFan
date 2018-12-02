@@ -1408,5 +1408,11 @@ namespace LOLFan.GUI {
 
             f.ShowForm();
         }
+
+        private void menuItem10_Click(object sender, EventArgs e)
+        {
+            LCDTextForm f = new LCDTextForm(lcd);
+            f.Show();
+        }
     }
 }

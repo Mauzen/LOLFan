@@ -105,6 +105,7 @@
             this.sensorStringTextBox.Location = new System.Drawing.Point(285, 50);
             this.sensorStringTextBox.Multiline = true;
             this.sensorStringTextBox.Name = "sensorStringTextBox";
+            this.sensorStringTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.sensorStringTextBox.Size = new System.Drawing.Size(247, 116);
             this.sensorStringTextBox.TabIndex = 6;
             this.sensorStringTextBox.TextChanged += new System.EventHandler(this.sensorStringTextBox_TextChanged);

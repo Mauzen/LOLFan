@@ -402,7 +402,9 @@ namespace LOLFan.GUI {
                     {
                         if (settings.Contains(new Identifier("virtual", i + "", si+"", "sensortype").ToString()))
                         {
-                            VirtualSensor s = new VirtualSensor("Virtual Sensor " + si, si, SensorType.Temperature, cont, settings);
+                            int type = 4;
+                            int.TryParse(settings.GetValue(new Identifier("virtual", i + "", si + "", "sensortype").ToString(), "4"), out type);
+                            VirtualSensor s = new VirtualSensor("Virtual Sensor " + si, si, (SensorType)type, cont, settings);
                             cont.AddVirtualSensor(s);
                         }
                     }

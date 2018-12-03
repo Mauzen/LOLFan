@@ -19,9 +19,7 @@ namespace LOLFan.Utilities
 
 
             val = new ValueString(settings.GetValue(new Identifier(Identifier, "valuestring").ToString(), "0"), SharedData.AllSensors);
-            int type = 4;
-            int.TryParse(settings.GetValue(new Identifier(Identifier, "sensortype").ToString(), "4"), out type);
-            SetSensorType ((SensorType)type);
+            SetSensorType (sensorType);
         }
 
         public void UpdateValue()

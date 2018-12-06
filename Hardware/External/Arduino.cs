@@ -76,6 +76,7 @@ namespace LOLFan.Hardware.External
                 } catch (Exception)
                 {
                     connected = false;
+                    port.Close();
                 }
 
             };
@@ -138,7 +139,7 @@ namespace LOLFan.Hardware.External
         {
             if (!connected) return;
 
-            curSkip++;
+            /*curSkip++;
             if (curSkip > skip)
             {
                 curSkip = 0;
@@ -146,7 +147,7 @@ namespace LOLFan.Hardware.External
             else
             {
                 return;
-            }
+            }*/
             if (!worker.IsBusy) worker.RunWorkerAsync();
             // Parse
             /*int count = 0;
@@ -164,8 +165,13 @@ namespace LOLFan.Hardware.External
                 for (int i = 0; i < s.Length; i++)
                 {                    
                     try
-                    {   
-                        if (s[i].Length > 0) sensors[i].Value = float.Parse(s[i]) / 100.0f;  // lol convert from . decimal doesnt work well atm
+                    {
+                        if (s[i].Length > 0)
+                        {
+                            float val = float.Parse(s[i]) / 100.0f;
+                            // Sanity check
+                            if (0.0f <= val && val <= 100.0f) sensors[i].Value = val;
+                        }
                         // ---- Conversion moved to arduino sketch
                         //float res = 47000f / ((1023f / float.Parse(s[i])) - 1f);
                         //sensors[i].Value = (float?)LookUpResTemp(res/1000f);
@@ -187,7 +193,12 @@ namespace LOLFan.Hardware.External
             }
             set
             {
-                displayText = value;
+                if (displayText != value)
+                {
+                    displayText = value;
+                    if (!worker.IsBusy) worker.RunWorkerAsync();
+                }
+
             }
         }
 

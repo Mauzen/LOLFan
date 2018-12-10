@@ -255,7 +255,7 @@ namespace LOLFan.Utilities
                 //}
                 //cur = cur.AddSeconds(-4);
             }
-            values.Last = new SensorValue(ParseOutput(), DateTime.UtcNow);
+            if (values.Count > 0) values.Last = new SensorValue(ParseOutput(), DateTime.UtcNow);
 
             return values;
         } 

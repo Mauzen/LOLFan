@@ -36,6 +36,8 @@ namespace LOLFan.Hardware.External
         private string displayText = "Initializing...";
         private bool skipNext;
 
+        static readonly object portLocker = new object();
+
         public Arduino(string name, string comport, Identifier identifier, ISettings settings) : base(name, identifier, settings)
         {
             if (!ushort.TryParse(settings.GetValue(
@@ -50,7 +52,29 @@ namespace LOLFan.Hardware.External
             sensors.Add(new Sensor("Air IN Side", 0, SensorType.Temperature, this, settings));
             sensors.Add(new Sensor("Air IN Front", 1, SensorType.Temperature, this, settings));
             sensors.Add(new Sensor("Air OUT", 2, SensorType.Temperature, this, settings));
-            foreach(ISensor sen in sensors) ActivateSensor(sen);
+            Sensor control0 = new Sensor("Fan0 PWM", 0, SensorType.Control, this, settings);
+            Sensor fan0 = new Sensor("Fan0 RPM", 0, SensorType.Fan, this, settings);
+            Control fan0Control = new Control(control0, settings, 0, 255, fan0);
+            fan0.Affector = control0;
+            fan0Control.InternalSoftwareValue = 50.0f;
+            fan0Control.SetSoftware(50.0f);
+            fan0Control.SoftwareControlValueChanged += delegate (Control c)
+            {
+                lock (portLocker)
+                {
+                    port.Write((char)31 + "" + (byte)(fan0Control.SoftwareValue * 2.55) + "\0");
+                }
+                control0.Value = fan0Control.SoftwareValue;
+                //Debug.WriteLine(fan0Control.SoftwareValue);
+            };
+            control0.Control = fan0Control;
+            control0.Affector = fan0;
+            sensors.Add(fan0);
+            sensors.Add(control0);
+            fan0.Value = 0.0f;
+            fan0Control.SetSoftware(float.Parse(settings.GetValue(new Identifier(fan0Control.Identifier, "value").ToString(), "50")));
+
+            foreach (ISensor sen in sensors) ActivateSensor(sen);
 
             InitSerial(comport);
 
@@ -64,15 +88,19 @@ namespace LOLFan.Hardware.External
                 }
                 try
                 {
-                    if (displayText.Length > 64)
+                    /*if (displayText.Length > 64)
                     {
+                        port.
                         port.Write(displayText.Substring(0, 64));
-                        port.Write(displayText.Substring(64));
+                        port.Write(displayText.Substring(64) + "\0");
                     }
                     else
+                    {*/
+                    lock (portLocker)
                     {
-                        port.Write(displayText);
+                        port.Write(displayText + "\0");
                     }
+                   // }
                 } catch (Exception)
                 {
                     connected = false;
@@ -91,7 +119,8 @@ namespace LOLFan.Hardware.External
                 port = new SerialPort(comport);
                 port.DataReceived += this.port_DataReceived;
 
-                port.WriteBufferSize = 80;
+                port.WriteBufferSize = 120;
+                port.BaudRate = 9600;
                 port.Open();
 
                 // Init to get fast responses
@@ -123,6 +152,8 @@ namespace LOLFan.Hardware.External
         {
             byte[] b = new byte[80];
             port.Read(b, 0, 80);
+            //string tmp = System.Text.Encoding.UTF8.GetString(b);
+           // if (tmp.Split(',').Length == 0) lastOutput = tmp;
             lastOutput = System.Text.Encoding.UTF8.GetString(b);
             //Debug.WriteLine("\r\n" + lastOutput);
         }
@@ -162,15 +193,28 @@ namespace LOLFan.Hardware.External
             if (lastOutput.Length > 0)
             {
                 string[] s = lastOutput.Split(',');
+                if (s.Length != 4)
+                {
+                    return;
+                }
                 for (int i = 0; i < s.Length; i++)
                 {                    
                     try
                     {
                         if (s[i].Length > 0)
                         {
-                            float val = float.Parse(s[i]) / 100.0f;
-                            // Sanity check
-                            if (0.0f <= val && val <= 100.0f) sensors[i].Value = val;
+                            // dumb temporary static stuff
+                            if (i == 3)
+                            {
+                                float val = float.Parse(s[i]);
+                                if (val != -1) sensors[i].Value = val;
+                            }
+                            else
+                            {
+                                float val = float.Parse(s[i]) / 100.0f;
+                                // Sanity check
+                                if (0.0f <= val && val <= 100.0f) sensors[i].Value = val;
+                            }
                         }
                         // ---- Conversion moved to arduino sketch
                         //float res = 47000f / ((1023f / float.Parse(s[i])) - 1f);
@@ -204,15 +248,21 @@ namespace LOLFan.Hardware.External
 
         public void ToggleDisplay()
         {
-            port.Write((char)28+"");
+            lock (portLocker)
+            {
+                port.Write((char)28 + "\0");
+            }
            // skipNext = true;
         }
         public void SetDisplay(bool on)
         {
-            if (on)
-                port.Write((char)29 + "");
-            else
-                port.Write((char)30 + "");
+            lock (portLocker)
+            {
+                if (on)
+                    port.Write((char)29 + "\0");
+                else
+                    port.Write((char)30 + "\0");
+            }
             //skipNext = true;
         }
 

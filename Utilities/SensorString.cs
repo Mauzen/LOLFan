@@ -148,7 +148,7 @@ namespace LOLFan.Utilities
                         case RefType.CAL:
                             
 
-                            if (used[i].SensorType == SensorType.Control && used[i].Control.UseCalibrated && used[i].Value.HasValue)
+                            if (used[i].SensorType == SensorType.Control && used[i].Control != null && used[i].Control.UseCalibrated && used[i].Value.HasValue)
                             {
                                 if (used[i].Control.InternalSoftwareValue == 100)
                                 {

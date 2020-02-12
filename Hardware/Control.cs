@@ -227,6 +227,10 @@ namespace LOLFan.Hardware {
             {
                 return internalSoftwareValue;
             }
+            set
+            {
+                internalSoftwareValue = value;
+            }
         }
 
         public void SetDefault() {
@@ -308,7 +312,7 @@ namespace LOLFan.Hardware {
 
 
     internal event ControlEventHandler ControlModeChanged;
-    internal event ControlEventHandler SoftwareControlValueChanged;
+    public event ControlEventHandler SoftwareControlValueChanged;
     internal event ControlEventHandler FanUpRateChanged;
     internal event ControlEventHandler FanDownRateChanged;
     }

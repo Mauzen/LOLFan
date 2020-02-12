@@ -69,11 +69,11 @@ namespace LOLFan.Hardware.Peripheral
             sensors[0].Value = (float) (nw.GetIPv4Statistics().BytesReceived / 1024.0 / 1024.0);
             sensors[1].Value = (float) (nw.GetIPv4Statistics().BytesSent / 1024.0 / 1024.0);
             
-            if (sensors[0].Value - lastDown > 0)
+            if (sensors[0].Value - lastDown >= 0)
             {
                 sensors[2].Value = (float)(((sensors[0].Value - lastDown) / (curTime - lastTime)) * 1024.0);
             }
-            if (sensors[1].Value - lastUp > 0)
+            if (sensors[1].Value - lastUp >= 0)
             {
                 sensors[3].Value = (float)(((sensors[1].Value - lastUp) / (curTime - lastTime)) * 1024.0);
             }

@@ -44,6 +44,8 @@ namespace LOLFan.Hardware.External
             sensors.Add(new Sensor("Yesterday", 1, SensorType.KWH, this, settings));
             sensors.Add(new Sensor("Today", 2, SensorType.KWH, this, settings));
             sensors.Add(new Sensor("Power", 0, SensorType.Power, this, settings));
+            sensors.Add(new Sensor("Apparent Power", 1, SensorType.Power, this, settings));
+            sensors.Add(new Sensor("Reactive Power", 2, SensorType.Power, this, settings));
             sensors.Add(new Sensor("Factor", 0, SensorType.Factor, this, settings));
             sensors.Add(new Sensor("Voltage", 0, SensorType.Voltage, this, settings));
             sensors.Add(new Sensor("Current", 0, SensorType.Current, this, settings));
@@ -57,6 +59,7 @@ namespace LOLFan.Hardware.External
                 // Delay update to get data right before next update
                 Thread.Sleep((int) (int.Parse(settings.GetValue("update_rate", "1000")) - 3 * ping));
                 s = new WebClient().DownloadString("http://" + address + "/cm?cmnd=status%208");
+                //lastStatus = JsonConvert.DeserializeObject<Movie>(json);
             };
 
 
@@ -76,6 +79,7 @@ namespace LOLFan.Hardware.External
             // Parse
             int count = 0;
             Match m = Regex.Match(s, ":([0-9\\.]+)");
+            for (int i = 0; i < 4; i++) m = m.NextMatch();
             while (m.Success && sensors.Count > count)
             {
                 sensors[count].Value = float.Parse(m.Groups[1].ToString(), new CultureInfo("en-US").NumberFormat);
@@ -106,6 +110,7 @@ namespace LOLFan.Hardware.External
                         }
                         return s.Length > 0;
                     }
+                    Thread.Sleep(1000);
                 }
             } catch (Exception)
             {

@@ -133,7 +133,15 @@ namespace LOLFan.Utilities
                 case InputSource.Sensor:
                     if (!sourceSensor.Value.HasValue) return;
 
-                    lastValue = sourceSensor.Value.Value;
+                    if (sourceSensor.SensorType == SensorType.Control && sourceSensor.Control != null && sourceSensor.Control.UseCalibrated)
+                    {
+                        lastValue = sourceSensor.Control.SoftwareValue;
+                    }
+                    else
+                    {
+                        lastValue = sourceSensor.Value.Value;
+                    }
+
                     if (Math.Abs(lastValue - lastAppliedValue) >= hysteresis || overrideHysteresis)
                     {
                         controlled.SetSoftware(curve.Get(lastValue));
@@ -143,7 +151,7 @@ namespace LOLFan.Utilities
                     break;
 
                 case InputSource.ValueString:
-                    if (value.Output == 0) return;
+                    //if (value.Output == 0) return;
 
                     float curValue = value.Output;
                     if (lastValue == curValue && !overrideHysteresis) return;

@@ -36,7 +36,8 @@ namespace LOLFan.Utilities
             MAX,        // Maximum value
             REL,        // Percentage between min and max
             CAL,        // Calibrated value (fans)
-            PREV        // Previous values
+            PREV,       // Previous values
+            AVG         // Average of last x seconds
         }
 
         private List<ISensor> sensors;
@@ -70,7 +71,7 @@ namespace LOLFan.Utilities
             input = input.Replace('[', ' ').Replace(']', ' ');
 
             string converted = input;
-            Match m = Regex.Match(input, "{([a-zA-Z0-9/]+)(,min|,max|,val|,rel|,cal|,prv([0-9]+))?}");
+            Match m = Regex.Match(input, "{([a-zA-Z0-9/]+)(,min|,max|,val|,rel|,cal|,prv([0-9]+)|,avg([0-9]+))?}");
             while (m.Success)
             {
                 replaced = false;
@@ -85,6 +86,11 @@ namespace LOLFan.Utilities
                         {
                             param.Add(int.Parse(m.Groups[3].ToString()));
                             type.Add(RefType.PREV);
+                        } else
+                        if (m.Groups[2].ToString().StartsWith(",avg"))
+                        {
+                            param.Add(int.Parse(m.Groups[4].ToString()));
+                            type.Add(RefType.AVG);
                         }
                         else
                         {
@@ -159,8 +165,10 @@ namespace LOLFan.Utilities
                             }
                             break;
                         case RefType.PREV:
-                            RingCollection<SensorValue> vals = used[i].Values as RingCollection<SensorValue>;
-                            exp.Parameters[i + ""] = GetPreviousValue(vals, param[i]);
+                            exp.Parameters[i + ""] = GetPreviousValue(used[i].Values as RingCollection<SensorValue>, param[i]);
+                            break;
+                        case RefType.AVG:
+                            exp.Parameters[i + ""] = GetPreviousAverage(used[i].Values as RingCollection<SensorValue>, param[i]);
                             break;
                         case RefType.MAX:
                             exp.Parameters[i + ""] = (used[i].Max.HasValue ? used[i].Max.Value : 0);
@@ -212,6 +220,22 @@ namespace LOLFan.Utilities
                 if ((DateTime.UtcNow - vals[i].Time).TotalSeconds < seconds && (DateTime.UtcNow - vals[i - 1].Time).TotalSeconds >= seconds) return vals[i - 1].Value;
             }
             return vals[vals.Count-1].Value;
+        }
+
+        private static float GetPreviousAverage(RingCollection<SensorValue> vals, int seconds)
+        {
+            float sum = 0f;
+            int items = 0;
+            for (int i = vals.Count - 1; i > 0; i--)
+            {
+                if ((DateTime.UtcNow - vals[i].Time).TotalSeconds > seconds) break;
+                if ((DateTime.UtcNow - vals[i].Time).TotalSeconds <= seconds)
+                {
+                    sum += vals[i].Value;
+                    items++;
+                }
+            }
+            return sum / items;
         }
 
         private static float GetValueAtTime(RingCollection<SensorValue> values, DateTime time)

@@ -379,7 +379,7 @@ namespace LOLFan.GUI {
             hotkeyManager = new HotkeyManager(this, settings);
             settings.hotkeyManager = hotkeyManager; 
             
-            if (settings.GetValue("CheckForUpdates", true))
+            if (settings.GetValue("CheckForUpdates", false))
             {
                 new UpdateChecker().Check(false);
             }  

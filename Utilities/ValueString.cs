@@ -165,10 +165,23 @@ namespace LOLFan.Utilities
                             }
                             break;
                         case RefType.PREV:
-                            exp.Parameters[i + ""] = GetPreviousValue(used[i].Values as RingCollection<SensorValue>, param[i]);
+                            if (time.HasValue)
+                            {
+                                exp.Parameters[i + ""] = GetValueAtTime(used[i].Values as RingCollection<SensorValue>, time.Value.AddSeconds(-1 * param[i]));
+                            } else
+                            {
+                                exp.Parameters[i + ""] = GetPreviousValue(used[i].Values as RingCollection<SensorValue>, param[i]);
+                            }
                             break;
                         case RefType.AVG:
-                            exp.Parameters[i + ""] = GetPreviousAverage(used[i].Values as RingCollection<SensorValue>, param[i]);
+                            if (time.HasValue)
+                            {
+                                exp.Parameters[i + ""] = GetPreviousAverageAtTime(used[i].Values as RingCollection<SensorValue>, param[i], time.Value);
+                            }
+                            else
+                            {
+                                exp.Parameters[i + ""] = GetPreviousAverage(used[i].Values as RingCollection<SensorValue>, param[i]);
+                            }
                             break;
                         case RefType.MAX:
                             exp.Parameters[i + ""] = (used[i].Max.HasValue ? used[i].Max.Value : 0);
@@ -222,16 +235,32 @@ namespace LOLFan.Utilities
             return vals[vals.Count-1].Value;
         }
 
-        private static float GetPreviousAverage(RingCollection<SensorValue> vals, int seconds)
+        private static float GetPreviousAverage(RingCollection<SensorValue> values, int seconds)
         {
             float sum = 0f;
             int items = 0;
-            for (int i = vals.Count - 1; i > 0; i--)
+            for (int i = values.Count - 1; i > 0; i--)
             {
-                if ((DateTime.UtcNow - vals[i].Time).TotalSeconds > seconds) break;
-                if ((DateTime.UtcNow - vals[i].Time).TotalSeconds <= seconds)
+                if ((DateTime.UtcNow - values[i].Time).TotalSeconds > seconds) break;
+                if ((DateTime.UtcNow - values[i].Time).TotalSeconds <= seconds)
                 {
-                    sum += vals[i].Value;
+                    sum += values[i].Value;
+                    items++;
+                }
+            }
+            return sum / items;
+        }
+
+        private static float GetPreviousAverageAtTime(RingCollection<SensorValue> values, int seconds, DateTime time)
+        {
+            float sum = 0f;
+            int items = 0;
+            for (int i = values.Count - 1; i > 0; i--)
+            {
+                if (time.AddSeconds(-1 * seconds) > values[i - 1].Time) break;
+                if (time >= values[i].Time)
+                {
+                    sum += values[i].Value;
                     items++;
                 }
             }
@@ -254,8 +283,6 @@ namespace LOLFan.Utilities
 
         public RingCollection<SensorValue> CreateHistory(RingCollection<SensorValue> values)
         {
-            //DateTime last = values.Last.Time;
-           // DateTime cur = last;
             values.Clear();
             // Create a sorted list of all sensor log times
             List<DateTime> times = new List<DateTime>();
@@ -267,17 +294,10 @@ namespace LOLFan.Utilities
                 }
             }
             times.Sort((a, b) => b.CompareTo(a));
-           // float lastval = float.NaN;
             foreach (DateTime cur in times) 
-            //while ((last - cur).TotalSeconds <= 24*60*60)
             {
                 float val = ParseOutput(cur);
-               // if (lastval != val)
-                //{
-                    values.Append(new SensorValue(val, cur));
-                //    lastval = val;
-                //}
-                //cur = cur.AddSeconds(-4);
+                values.Append(new SensorValue(val, cur));
             }
             if (values.Count > 0) values.Last = new SensorValue(ParseOutput(), DateTime.UtcNow);
 

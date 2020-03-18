@@ -104,6 +104,8 @@ namespace LOLFan.GUI {
             this.webMenuItem = new System.Windows.Forms.MenuItem();
             this.runWebServerMenuItem = new System.Windows.Forms.MenuItem();
             this.serverPortMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.helpMenuItem = new System.Windows.Forms.MenuItem();
             this.aboutMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
@@ -136,8 +138,6 @@ namespace LOLFan.GUI {
             this.removeControllerButton = new System.Windows.Forms.Button();
             this.editControllerButton = new System.Windows.Forms.Button();
             this.newControllerButton = new System.Windows.Forms.Button();
-            this.menuItem9 = new System.Windows.Forms.MenuItem();
-            this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -604,13 +604,13 @@ namespace LOLFan.GUI {
             // 
             // webMenuItem
             // 
-            this.webMenuItem.Enabled = false;
+            this.webMenuItem.Enabled = true;
             this.webMenuItem.Index = 11;
             this.webMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.runWebServerMenuItem,
             this.serverPortMenuItem});
             this.webMenuItem.Text = "Remote Web Server";
-            this.webMenuItem.Visible = false;
+            this.webMenuItem.Visible = true;
             // 
             // runWebServerMenuItem
             // 
@@ -622,6 +622,17 @@ namespace LOLFan.GUI {
             this.serverPortMenuItem.Index = 1;
             this.serverPortMenuItem.Text = "Port";
             this.serverPortMenuItem.Click += new System.EventHandler(this.serverPortMenuItem_Click);
+            // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 12;
+            this.menuItem9.Text = "-";
+            // 
+            // menuItem10
+            // 
+            this.menuItem10.Index = 13;
+            this.menuItem10.Text = "LCD display text...";
+            this.menuItem10.Click += new System.EventHandler(this.menuItem10_Click);
             // 
             // helpMenuItem
             // 
@@ -1000,17 +1011,6 @@ namespace LOLFan.GUI {
             this.newControllerButton.Text = "New...";
             this.newControllerButton.UseVisualStyleBackColor = true;
             this.newControllerButton.Click += new System.EventHandler(this.newControllerButton_Click);
-            // 
-            // menuItem9
-            // 
-            this.menuItem9.Index = 12;
-            this.menuItem9.Text = "-";
-            // 
-            // menuItem10
-            // 
-            this.menuItem10.Index = 13;
-            this.menuItem10.Text = "LCD display text...";
-            this.menuItem10.Click += new System.EventHandler(this.menuItem10_Click);
             // 
             // MainForm
             // 

@@ -139,7 +139,7 @@ namespace LOLFan.Utilities {
       string ext) 
     {
       // resource names do not support the hyphen
-      name = "OpenHardwareMonitor.Resources." + 
+      name = "LOLFan.Resources." + 
         name.Replace("custom-theme", "custom_theme");
 
       string[] names =
@@ -173,7 +173,7 @@ namespace LOLFan.Utilities {
     }
 
     private void ServeResourceImage(HttpListenerResponse response, string name) {
-      name = "OpenHardwareMonitor.Resources." + name;
+      name = "LOLFan.Resources." + name;
 
       string[] names =
         Assembly.GetExecutingAssembly().GetManifestResourceNames();

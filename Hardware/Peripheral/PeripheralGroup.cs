@@ -29,12 +29,29 @@ namespace LOLFan.Hardware.Peripheral
         {
             NetworkInterface[] interfaces;
             interfaces = NetworkInterface.GetAllNetworkInterfaces();
+            List<NetworkInterface> filter = new List<NetworkInterface>();            
+
+            foreach (NetworkInterface i in interfaces)
+            {
+                // Ignore loopback interface and down adapters (maybe undo this to include unconnected wlan)
+                if (i.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
+                if (i.OperationalStatus == OperationalStatus.Down) continue;                
+                filter.Add(i);
+            }
+            // Sort by names to get constant IDs
+            filter.Sort(CompareInterfacesByName);
+            interfaces = filter.ToArray();
             for (int i = 0; i < interfaces.Length; i++)
             {
                 NetworkAdapter t = new NetworkAdapter(interfaces[i].Name, interfaces[i], new Identifier("peripheral", "network", i + ""), settings);
                 hardware.Add(t);
             }
 
+        }
+
+        private static int CompareInterfacesByName(NetworkInterface x, NetworkInterface y)
+        {
+            return String.Compare(x.Name, y.Name);
         }
 
         public IHardware[] Hardware

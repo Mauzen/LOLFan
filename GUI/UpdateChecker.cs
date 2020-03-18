@@ -32,7 +32,7 @@ namespace LOLFan.GUI
             {
 
                 WebClient client = new WebClient();
-                String data = client.DownloadString("http://mauzen.org/lolfan/checkversion.php");
+                String data = client.DownloadString("http://www.mauzen.org/lolfan/checkversion.php");
                 String[] info = data.Split(' ');
 
                 Version current = new Version(info[0]);

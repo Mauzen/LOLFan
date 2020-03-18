@@ -11,6 +11,8 @@ namespace LOLFan.Utilities
     public class VirtualSensor : Sensor, IVirtualSensor
     {
         private ValueString val;
+        private int skip;
+        private int skipCount;
 
         public VirtualSensor(string name, int index, SensorType sensorType,
            Hardware.Hardware hardware, ISettings settings) : 
@@ -20,10 +22,20 @@ namespace LOLFan.Utilities
 
             val = new ValueString(settings.GetValue(new Identifier(Identifier, "valuestring").ToString(), "0"), SharedData.AllSensors);
             SetSensorType (sensorType);
+            skip = 0;
+            int.TryParse(settings.GetValue(new Identifier(Identifier, "skip").ToString(), "0"), out skip);
+            skipCount = skip;   // Force initial update
         }
 
         public void UpdateValue()
         {
+            if (skip > 0 && skipCount++ < skip)
+            {
+                return;
+            } else
+            {
+                skipCount = 0;
+            }
             this.Value = val.Output;
         }
 
@@ -41,6 +53,19 @@ namespace LOLFan.Utilities
                     this.settings.SetValue(new Identifier(Identifier, "valuestring").ToString(), value);
                     val.CreateHistory(Values as RingCollection<SensorValue>);
                 }
+            }
+        }
+
+        public int Skip
+        {
+            get
+            {
+                return skip;
+            }
+            set
+            {
+                skip = value;
+                this.settings.SetValue(new Identifier(Identifier, "skip").ToString(), value + "");
             }
         }
 
@@ -63,6 +88,7 @@ namespace LOLFan.Utilities
         {
             settings.Remove(new Identifier(Identifier, "valuestring").ToString());
             settings.Remove(new Identifier(Identifier, "sensortype").ToString());
+            settings.Remove(new Identifier(Identifier, "skip").ToString());
         }
     }
 }

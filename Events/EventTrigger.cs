@@ -19,6 +19,7 @@ namespace LOLFan.Events
     {
         public enum TriggerType
         {
+            Invalid,
             OnSensorUpdate,
             OnHotkey
         }
@@ -39,6 +40,25 @@ namespace LOLFan.Events
         public bool Check()
         {
             return false;
+        }
+
+        internal static EventTrigger LoadTrigger(Event e, int i, PersistentSettings settings)
+        {
+            Identifier identifier = new Identifier(e.Identifier, "event", i + "");
+            string name = settings.GetValue(new Identifier(e.Identifier, "name").ToString(), "Unnamed trigger");
+            string description = settings.GetValue(new Identifier(e.Identifier, "description").ToString(), "No Description");
+            TriggerType type = (TriggerType) settings.GetValue(new Identifier(e.Identifier, "type").ToString(), (int) TriggerType.Invalid);
+
+
+            EventTrigger trigger = null;
+            switch (type)
+            {
+                //case TriggerType.OnSensorUpdate:
+                //    trigger = new SensorStringEvent(identifier, )
+
+            }
+
+            return trigger;
         }
 
         public Identifier Identifier

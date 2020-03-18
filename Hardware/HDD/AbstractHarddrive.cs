@@ -20,7 +20,7 @@ using LOLFan.Collections;
 namespace LOLFan.Hardware.HDD {
   internal abstract class AbstractHarddrive : Hardware {
 
-    private const int UPDATE_DIVIDER = 30; // update only every 30s
+    private const int UPDATE_DIVIDER = 30000; // update only every 30s
 
     // array of all harddrive types, matching type is searched in this order
     private static Type[] hddTypes = {       

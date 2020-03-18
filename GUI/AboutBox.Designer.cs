@@ -163,7 +163,7 @@ namespace LOLFan.GUI {
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(85, 13);
             this.label6.TabIndex = 12;
-            this.label6.Text = "Version 0.1 DEV";
+            this.label6.Text = "Version 0.3.0.0";
             // 
             // label7
             // 
@@ -172,7 +172,7 @@ namespace LOLFan.GUI {
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(198, 13);
             this.label7.TabIndex = 13;
-            this.label7.Text = "Copyright © 2017 Michel \"Mauzen\" Soll ";
+            this.label7.Text = "Copyright © 2017-2020 Michel \"Mauzen\" Soll ";
             // 
             // linkLabel1
             // 

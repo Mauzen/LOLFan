@@ -64,7 +64,7 @@ namespace LOLFan.GUI
             this.control = control;
             InitializeComponent();
 
-            this.Text = control.Name;
+            this.Text = control.Name + " (" + control.ID + ")";
 
             model = CreatePlotModel();
 

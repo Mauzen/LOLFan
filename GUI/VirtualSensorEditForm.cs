@@ -16,6 +16,7 @@ namespace LOLFan.GUI
         private VirtualSensor sensor;
         private SensorType sensorType;
         private String valueStringInput;
+        private int skip;
 
 
 
@@ -39,6 +40,8 @@ namespace LOLFan.GUI
             sensorTypeComboBox.SelectedItem = (SensorType)type;
 
             valueStringTextBox.Text = sensor.ValueStringInput;
+
+            skipNumericUpDown.Value = sensor.Skip;
         }
         
 
@@ -49,12 +52,14 @@ namespace LOLFan.GUI
                 // Update VirtualSensor
                 sensor.ValueStringInput = valueStringTextBox.Text;
                 sensor.SetSensorType((SensorType)sensorTypeComboBox.SelectedItem);
+                sensor.Skip = (int) skipNumericUpDown.Value;
             }
             else
             {
                 // Provide result data
                 sensorType = (SensorType)sensorTypeComboBox.SelectedItem;
                 valueStringInput = valueStringTextBox.Text;
+                skip = (int)skipNumericUpDown.Value;
             }            
 
             this.DialogResult = DialogResult.OK;
@@ -87,6 +92,14 @@ namespace LOLFan.GUI
             get
             {
                 return valueStringInput;
+            }
+        }
+
+        public int Skip
+        {
+            get
+            {
+                return skip;
             }
         }
 

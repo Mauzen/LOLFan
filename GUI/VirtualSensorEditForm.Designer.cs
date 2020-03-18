@@ -35,11 +35,14 @@
             this.sensorTypeComboBox = new System.Windows.Forms.ComboBox();
             this.sensorTypeLabel = new System.Windows.Forms.Label();
             this.restartLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.skipNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.skipNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // confirmButton
             // 
-            this.confirmButton.Location = new System.Drawing.Point(128, 142);
+            this.confirmButton.Location = new System.Drawing.Point(128, 177);
             this.confirmButton.Name = "confirmButton";
             this.confirmButton.Size = new System.Drawing.Size(126, 23);
             this.confirmButton.TabIndex = 0;
@@ -52,6 +55,7 @@
             this.valueStringTextBox.Location = new System.Drawing.Point(93, 12);
             this.valueStringTextBox.Multiline = true;
             this.valueStringTextBox.Name = "valueStringTextBox";
+            this.valueStringTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.valueStringTextBox.Size = new System.Drawing.Size(293, 79);
             this.valueStringTextBox.TabIndex = 1;
             // 
@@ -66,7 +70,7 @@
             // 
             // abortButton
             // 
-            this.abortButton.Location = new System.Drawing.Point(260, 142);
+            this.abortButton.Location = new System.Drawing.Point(260, 177);
             this.abortButton.Name = "abortButton";
             this.abortButton.Size = new System.Drawing.Size(126, 23);
             this.abortButton.TabIndex = 3;
@@ -102,11 +106,29 @@
             this.restartLabel.Text = "Please restart the software\r\nfor this to take effect";
             this.restartLabel.Visible = false;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 135);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(69, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Skip updates";
+            // 
+            // skipNumericUpDown
+            // 
+            this.skipNumericUpDown.Location = new System.Drawing.Point(93, 133);
+            this.skipNumericUpDown.Name = "skipNumericUpDown";
+            this.skipNumericUpDown.Size = new System.Drawing.Size(63, 20);
+            this.skipNumericUpDown.TabIndex = 8;
+            // 
             // VirtualSensorEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(398, 188);
+            this.ClientSize = new System.Drawing.Size(398, 212);
+            this.Controls.Add(this.skipNumericUpDown);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.restartLabel);
             this.Controls.Add(this.sensorTypeLabel);
             this.Controls.Add(this.sensorTypeComboBox);
@@ -116,6 +138,7 @@
             this.Controls.Add(this.confirmButton);
             this.Name = "VirtualSensorEditForm";
             this.Text = "VirtualSensorEditForm";
+            ((System.ComponentModel.ISupportInitialize)(this.skipNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -130,5 +153,7 @@
         private System.Windows.Forms.ComboBox sensorTypeComboBox;
         private System.Windows.Forms.Label sensorTypeLabel;
         private System.Windows.Forms.Label restartLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown skipNumericUpDown;
     }
 }

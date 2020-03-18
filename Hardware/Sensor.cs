@@ -61,7 +61,7 @@ namespace LOLFan.Hardware {
         1 : parameterDescriptions.Length+1];
       for (int i = 0; i < parameters.Length-1; i++ ) 
         parameters[i] = new Parameter(parameterDescriptions[i], this, settings);
-            parameters[parameters.Length-1] = new Parameter(new ParameterDescription("Hours cached", "Sensor data is cached for plot for this long. Reduce to save memory usage.", 24.0f), this, settings);
+            parameters[parameters.Length-1] = new Parameter(new ParameterDescription("Hours cached", "Sensor data is cached for plot for this long. Reduce to save memory usage, set to 0 to disable plotting.", 24.0f), this, settings);
       this.parameters = parameters;
 
       this.settings = settings;
@@ -195,7 +195,7 @@ namespace LOLFan.Hardware {
         while (values.Count > 0 && (now - values.First.Time).TotalHours > parameters[parameters.Length - 1].Value)
           values.Remove();
 
-        if (value.HasValue) {
+        if (value.HasValue && parameters[parameters.Length - 1].Value > 0) {
           sum += value.Value;
           count++;
           if (count == 4) {
